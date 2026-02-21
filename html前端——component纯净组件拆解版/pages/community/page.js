@@ -1,4 +1,9 @@
 ﻿(async function () {
+  const pageId = 'community';
+  const mockMode = typeof getMockMode === 'function' ? getMockMode() : 'baseline';
+  const mockSeed = typeof getMockSeed === 'function' ? getMockSeed() : 20260220;
+  const pageData = typeof getPageMockData === 'function' ? await getPageMockData(pageId, mockMode) : {};
+
   const c_top_frame_and_tabs = await loadComponentTemplate('top-frame-and-tabs');
   const c_board_my_requests = await loadComponentTemplate('board-my-requests');
   const c_board_feature_boost = await loadComponentTemplate('board-feature-boost');
@@ -6,9 +11,21 @@
 
   const root = document.getElementById('page-root');
   if (!root) return;
-  root.innerHTML = `<div class="phone-frame">` + c_top_frame_and_tabs + c_board_my_requests + c_board_feature_boost + c_board_feedback + `</div>`;
+  const shell = createPageShell({
+    pageId,
+    hasTabBar: true,
+    activeTab: 'community',
+    topInsetMode: 'spacer'
+  });
+  root.innerHTML = shell.render({
+    topHtml: c_top_frame_and_tabs,
+    contentHtml: '<div class="page-content"><div class="scroll-content" id="community-scroll-content"></div></div>'
+  });
 
-document.querySelector('.phone-frame').insertAdjacentHTML('beforeend', getTabBar('community'));
+  const scroll = document.getElementById('community-scroll-content');
+  if (scroll) {
+    scroll.innerHTML = c_board_my_requests + c_board_feature_boost + c_board_feedback;
+  }
 
   // Expose for inline onclick handlers in tab buttons.
   window.switchCommTab = function (idx) {
@@ -18,5 +35,22 @@ document.querySelector('.phone-frame').insertAdjacentHTML('beforeend', getTabBar
     }
   };
 
+
+  initPageComponents(pageId, [
+    'top-frame-and-tabs',
+    'board-my-requests',
+    'board-feature-boost',
+    'board-feedback'
+  ], {
+    pageId,
+    mode: mockMode,
+    seed: mockSeed,
+    pageData,
+    viewport: { width: window.innerWidth, height: window.innerHeight }
+  });
+
+  if (typeof applyMockStressToPage === 'function') {
+    applyMockStressToPage(pageId, mockMode);
+  }
 })();
 

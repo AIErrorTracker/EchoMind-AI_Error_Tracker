@@ -1,12 +1,12 @@
 ﻿
                 <!-- Question List by Type -->
-                <div class="section-header">
+                <div class="section-header" data-component="question-type-browser" data-region="question-type-browser">
                     <span class="section-title" style="font-size:var(--font-md);">按题型浏览</span>
-                    <button class="btn-text" onclick="navigateTo('upload-menu.html')">上传卷子</button>
+                    <button class="btn-text" data-route="uploadMenu">上传卷子</button>
                 </div>
 
                 <div class="list-group">
-                    <div class="list-item" onclick="navigateTo('question-aggregate.html')">
+                    <div class="list-item" data-route="questionAggregate">
                         <div class="list-icon" style="background:var(--gray-900); color:#fff; font-size:11px;">1-8</div>
                         <div class="list-body">
                             <div class="list-label">选择题 (1-8)</div>
@@ -43,3 +43,5 @@
                 </div>
 
   
+
+

@@ -7,10 +7,10 @@ from pathlib import Path
 from PIL import Image, ImageDraw, ImageFont
 from playwright.async_api import async_playwright
 
-ROOT = Path(r"d:\AI\AI+high school homework\EchoMind-AI_Error_Tracker\html前端——component纯净组件拆解版")
+ROOT = Path(__file__).resolve().parents[1]
 PAGES_DIR = ROOT / "pages"
-OUT_DIR = ROOT / "page-annotations"
-BASE_URL = "http://localhost:5500"
+OUT_DIR = ROOT / "artifacts" / "page-annotations"
+BASE_URL = os.getenv("ANNOTATION_BASE_URL", "http://localhost:5500")
 VIEWPORT = {"width": 1200, "height": 980}
 
 MODULE_ORDER = {
@@ -527,8 +527,8 @@ async def main():
 
             report.append(f"## {slug}")
             report.append("")
-            report.append(f"- 原图：`page-annotations/raw/{slug}.png`")
-            report.append(f"- 标注图：`page-annotations/annotated/{slug}-annotated.png`")
+            report.append(f"- 原图：`artifacts/page-annotations/raw/{slug}.png`")
+            report.append(f"- 标注图：`artifacts/page-annotations/annotated/{slug}-annotated.png`")
             report.append("")
             report.append("模块编号：")
             for i, b in enumerate(boxes, start=1):

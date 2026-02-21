@@ -1,1 +1,8 @@
-﻿/* index/recommendation-list component styles (kept empty to preserve existing page-level styles) */
+/* Keep edge-mode long text from inflating page scroll width. */
+.index-recommendation-list {
+  overflow-x: hidden;
+}
+
+.index-recommendation-list .rec-card {
+  overflow: hidden;
+}

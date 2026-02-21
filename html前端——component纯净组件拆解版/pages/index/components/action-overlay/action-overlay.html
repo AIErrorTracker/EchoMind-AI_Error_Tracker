@@ -1,5 +1,5 @@
 ﻿<!-- FAB (+) Button -->
-<button class="fab" onclick="showModal('upload-modal')">+</button>
+<button class="fab" onclick="showModal('upload-modal')" data-component="action-overlay" data-region="action-overlay">+</button>
 
 <!-- Upload Modal -->
 <div class="modal-overlay" id="upload-modal" onclick="hideModal('upload-modal')">
@@ -8,7 +8,7 @@
     <div style="font-size:var(--font-lg); font-weight:600; margin-bottom:16px;">新建</div>
 
     <div class="list-group" style="margin:0; box-shadow:none; border:1px solid var(--border-color);">
-      <div class="list-item" onclick="navigateTo('upload-menu.html')">
+      <div class="list-item" data-route="uploadMenu">
         <div class="list-icon" style="background:var(--gray-900); color:#fff;">HW</div>
         <div class="list-body">
           <div class="list-label">上传作业</div>
@@ -16,7 +16,7 @@
         </div>
         <span class="list-chevron"></span>
       </div>
-      <div class="list-item" onclick="navigateTo('upload-menu.html')">
+      <div class="list-item" data-route="uploadMenu">
         <div class="list-icon" style="background:var(--gray-600); color:#fff;">QK</div>
         <div class="list-body">
           <div class="list-label">极简上传</div>
@@ -24,7 +24,7 @@
         </div>
         <span class="list-chevron"></span>
       </div>
-      <div class="list-item" onclick="navigateTo('upload-menu.html')">
+      <div class="list-item" data-route="uploadMenu">
         <div class="list-icon" style="background:var(--accent); color:#fff;">EX</div>
         <div class="list-body">
           <div class="list-label">上传考试卷子</div>
@@ -39,4 +39,6 @@
 </div>
 
 <!-- Tab Bar (injected by JS) -->
+
+
 

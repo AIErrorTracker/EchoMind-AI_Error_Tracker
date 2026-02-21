@@ -1,24 +1,24 @@
 ﻿<div class="page-content"
-            style="top:calc(var(--safe-top) + var(--nav-height) + 8px); padding-bottom:40px; display:flex; flex-direction:column; justify-content:center;">
+            style="padding-bottom:40px; display:flex; flex-direction:column; justify-content:center;" data-component="flashcard" data-region="flashcard">
 
             <!-- Flashcard -->
             <div class="flashcard" id="flashcard"
                 onclick="document.getElementById('card-front').style.display = document.getElementById('card-front').style.display === 'none' ? 'block' : 'none'; document.getElementById('card-back').style.display = document.getElementById('card-back').style.display === 'none' ? 'block' : 'none'; document.getElementById('fc-actions').style.display = 'flex';">
-                <span class="card-type">识别卡</span>
+                <span class="card-type u-ellipsis-1">识别卡</span>
                 <div id="card-front" class="card-face">
-                    <div style="font-size:var(--font-base); color:var(--text-secondary); margin-bottom:12px;">题目关键词
+                    <div class="u-ellipsis-1" style="font-size:var(--font-base); color:var(--text-secondary); margin-bottom:12px;">题目关键词
                     </div>
-                    <div style="font-size:var(--font-xl); font-weight:600; line-height:1.6;">
+                    <div class="u-wrap-break" style="font-size:var(--font-xl); font-weight:600; line-height:1.6;">
                         "一个物块以初速度v0滑上长木板, 木板在光滑水平面上..."
                     </div>
-                    <div style="margin-top:20px; font-size:var(--font-sm); color:var(--gray-400);">点击翻转</div>
+                    <div class="u-ellipsis-1" style="margin-top:20px; font-size:var(--font-sm); color:var(--gray-400);">点击翻转</div>
                 </div>
                 <div id="card-back" class="card-face" style="display:none;">
-                    <div style="font-size:var(--font-base); color:var(--text-secondary); margin-bottom:12px;">对应模型</div>
-                    <div style="font-size:var(--font-2xl); font-weight:700; color:var(--accent); line-height:1.4;">
+                    <div class="u-ellipsis-1" style="font-size:var(--font-base); color:var(--text-secondary); margin-bottom:12px;">对应模型</div>
+                    <div class="u-ellipsis-1" style="font-size:var(--font-2xl); font-weight:700; color:var(--accent); line-height:1.4;">
                         板块运动
                     </div>
-                    <div
+                    <div class="u-wrap-break"
                         style="margin-top:16px; font-size:var(--font-base); color:var(--text-primary); line-height:1.6;">
                         关键特征: 两个物体通过摩擦力相互作用, 在光滑水平面上运动, 最终达到共速。
                     </div>
@@ -33,9 +33,12 @@
             </div>
 
             <!-- Tap hint -->
-            <div style="text-align:center; margin-top:16px; font-size:var(--font-sm); color:var(--gray-400);"
+            <div class="u-ellipsis-1" style="text-align:center; margin-top:16px; font-size:var(--font-sm); color:var(--gray-400);"
                 id="tap-hint">
                 点击卡片翻转查看答案
             </div>
 
         </div>
+
+
+

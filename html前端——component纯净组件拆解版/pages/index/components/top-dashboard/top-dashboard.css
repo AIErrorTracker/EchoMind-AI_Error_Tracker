@@ -1,1 +1,23 @@
-﻿/* index/top-dashboard component styles (kept empty to preserve existing page-level styles) */
+/* Guard quick-start button against extreme mock text expansion. */
+.index-top-dashboard [data-role="quick-start-btn"] {
+  min-width: 0;
+  overflow: hidden;
+}
+
+.index-top-dashboard [data-role="quick-start-btn"] > span {
+  min-width: 0;
+  max-width: 100%;
+}
+
+.index-top-dashboard [data-role="quick-start-btn"] > span:first-child {
+  flex: 0 1 auto;
+  max-width: 44%;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.index-top-dashboard [data-role="quick-start-btn"] > span:last-child {
+  flex: 1 1 auto;
+  text-align: left;
+}

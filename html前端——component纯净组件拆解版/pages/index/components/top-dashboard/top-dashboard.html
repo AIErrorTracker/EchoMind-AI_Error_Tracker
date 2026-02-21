@@ -1,48 +1,42 @@
-﻿<!-- Scrollable Content -->
-<div class="page-content" style="top:110px;">
-<div class="scroll-content">
-
-  <!-- Today Stats -->
-  <div class="stat-row" style="margin-top:4px;">
+﻿<section class="index-top-dashboard" data-component="top-dashboard" data-region="top-dashboard">
+  <div class="stat-row" style="margin-top:4px;" data-role="stats-row" data-list-region="stats-row">
     <div class="stat-card">
-      <div class="stat-value">3</div>
-      <div class="stat-label">今日闭环</div>
+      <div class="stat-value u-num-tabular">3</div>
+      <div class="stat-label u-ellipsis-1">今日闭环</div>
     </div>
     <div class="stat-card">
-      <div class="stat-value">2h25m</div>
-      <div class="stat-label">学习时长</div>
+      <div class="stat-value u-num-tabular">2h25m</div>
+      <div class="stat-label u-ellipsis-1">学习时长</div>
     </div>
     <div class="stat-card">
-      <div class="stat-value">12</div>
-      <div class="stat-label">本周闭环</div>
+      <div class="stat-value u-num-tabular">12</div>
+      <div class="stat-label u-ellipsis-1">本周闭环</div>
     </div>
   </div>
 
-  <!-- Prediction Entry -->
-  <div class="card" style="margin-top:12px; cursor:pointer;" onclick="navigateTo('prediction-center.html')">
-    <div style="display:flex; align-items:center; justify-content:space-between;">
-      <div>
-        <div style="font-size:var(--font-sm); color:var(--text-secondary); font-weight:500;">预测分数</div>
-        <div style="display:flex; align-items:baseline; gap:4px; margin-top:4px;">
-          <span class="score-big" style="font-size:40px;">63</span>
-          <span class="score-unit" style="font-size:var(--font-base);">/ 100</span>
+  <div class="card" style="margin-top:12px; cursor:pointer;" data-role="prediction-card" data-route="predictionCenter">
+    <div style="display:flex; align-items:center; justify-content:space-between; gap:12px;">
+      <div style="min-width:0;">
+        <div style="font-size:var(--font-sm); color:var(--text-secondary); font-weight:500;" class="u-ellipsis-1" data-role="prediction-label">预测分数</div>
+        <div style="display:flex; align-items:baseline; gap:4px; margin-top:4px; min-width:0;">
+          <span class="score-big u-num-tabular" style="font-size:40px;" data-role="prediction-score">63</span>
+          <span class="score-unit u-num-tabular" style="font-size:var(--font-base);" data-role="prediction-total">/ 100</span>
         </div>
-        <div style="font-size:var(--font-sm); color:var(--accent); margin-top:4px; font-weight:500;">
+        <div style="font-size:var(--font-sm); color:var(--accent); margin-top:4px; font-weight:500;" class="u-clamp-2" data-role="prediction-hint">
           目标 70 分 -- 查看预测详情
         </div>
       </div>
-      <div style="width:100px; height:50px;">
+      <div style="width:100px; height:50px; flex-shrink:0;">
         <svg id="mini-trend" class="trend-svg" style="width:100%;height:100%;"></svg>
       </div>
     </div>
   </div>
 
-  <!-- Quick Start -->
   <div style="padding:0 16px; margin-top:12px;">
-    <button class="btn btn-primary" onclick="navigateTo('model-training.html')" style="display:flex; align-items:center; justify-content:center; gap:8px;">
-      <span>快速开始</span>
-      <span style="font-size:var(--font-sm); opacity:0.8;">-- 板块运动 (约5分钟)</span>
+    <button class="btn btn-primary" data-role="quick-start-btn" data-route="modelTraining" style="display:flex; align-items:center; justify-content:center; gap:8px;">
+      <span data-role="quick-start-title">快速开始</span>
+      <span style="font-size:var(--font-sm); opacity:0.8;" class="u-ellipsis-1" data-role="quick-start-subtitle">-- 板块运动 (约5分钟)</span>
     </button>
   </div>
+</section>
 
-  

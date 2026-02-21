@@ -1,4 +1,4 @@
-﻿<div class="page-content with-nav" style="padding-bottom:90px;">
+﻿<div class="page-content with-nav" style="padding-bottom:90px;" data-component="main-content" data-region="main-content">
             <div class="scroll-content">
 
                 <!-- Question Reference -->
@@ -65,11 +65,13 @@
 
                     <!-- Actions after diagnosis -->
                     <div style="padding:0 0 8px;">
-                        <button class="btn btn-primary" onclick="navigateTo('model-training.html')"
+                        <button class="btn btn-primary" data-route="modelTraining"
                             style="margin-bottom:8px;">开始针对性训练</button>
-                        <button class="btn btn-secondary" onclick="navigateTo('question-detail.html')">返回题目</button>
+                        <button class="btn btn-secondary" data-route="questionDetail">返回题目</button>
                     </div>
                 </div>
 
             </div>
         </div>
+
+

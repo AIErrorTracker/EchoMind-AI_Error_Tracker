@@ -68,11 +68,11 @@
   --level-5-bg: var(--blue-200);
 
   /* Layout */
-  --safe-top: 54px;
-  --safe-bottom: 34px;
+  --top-spacer-height: 54px;
+  --safe-bottom: 16px;
   --tab-height: 50px;
   --nav-height: 44px;
-  --header-height: calc(var(--safe-top) + var(--nav-height));
+  --header-height: calc(var(--top-spacer-height) + var(--nav-height));
   --content-bottom: calc(var(--tab-height) + var(--safe-bottom));
 
   /* Typography */
@@ -117,6 +117,8 @@ html {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   -webkit-text-size-adjust: 100%;
+  width: 100%;
+  min-height: 100dvh;
 }
 
 body {
@@ -127,49 +129,51 @@ body {
   line-height: 1.47;
   overflow-x: hidden;
   -webkit-tap-highlight-color: transparent;
+  width: 100%;
+  min-height: 100dvh;
+  margin: 0;
 }
 
-/* Phone frame wrapper */
-.phone-frame {
-  width: 390px;
-  height: 844px;
-  margin: 0 auto;
+/* App shell wrapper */
+.phone-frame,
+.app-shell {
+  width: 100% !important;
+  max-width: none !important;
+  min-width: 0 !important;
+  min-height: 100dvh;
+  margin: 0;
   background: var(--bg-secondary);
   position: relative;
-  overflow: hidden;
-  border-radius: 44px;
-  box-shadow: 0 0 0 2px var(--gray-800), 0 20px 60px rgba(0,0,0,0.3);
-}
-
-/* Status bar */
-.status-bar {
-  height: var(--safe-top);
-  background: var(--bg-primary);
+  overflow-x: hidden;
+  overflow-y: visible;
+  border: 0 !important;
+  border-radius: 0 !important;
+  box-shadow: none !important;
   display: flex;
-  align-items: flex-end;
-  justify-content: space-between;
-  padding: 0 30px 6px;
-  font-size: var(--font-xs);
-  font-weight: 600;
-  color: var(--text-primary);
-  position: relative;
-  z-index: 100;
+  flex-direction: column;
 }
 
-.status-bar .time { font-size: 15px; font-weight: 600; }
-.status-bar .icons { display: flex; gap: 5px; align-items: center; font-size: 12px; }
+.phone-frame::before,
+.app-shell::before {
+  content: none !important;
+  display: none !important;
+}
 
-/* Dynamic island notch */
+.top-spacer {
+  height: var(--top-spacer-height);
+  flex: 0 0 auto;
+}
+
+#page-root {
+  width: 100%;
+  min-height: 100dvh;
+}
+
+/* Demo status bar is removed before Flutter migration */
+.status-bar,
 .status-bar::after {
-  content: '';
-  position: absolute;
-  top: 12px;
-  left: 50%;
-  transform: translateX(-50%);
-  width: 126px;
-  height: 36px;
-  background: #000;
-  border-radius: 20px;
+  display: none !important;
+  content: none !important;
 }
 
 /* --- Navigation Bar --- */
@@ -180,9 +184,10 @@ body {
   align-items: center;
   justify-content: center;
   padding: 0 16px;
-  position: relative;
+  position: sticky;
+  top: 0;
   border-bottom: 0.5px solid var(--border-light);
-  z-index: 90;
+  z-index: 140;
 }
 
 .nav-bar .nav-title {
@@ -244,7 +249,7 @@ body {
 
 /* --- Tab Bar --- */
 .tab-bar {
-  position: absolute;
+  position: fixed;
   bottom: 0;
   left: 0;
   right: 0;
@@ -256,7 +261,7 @@ body {
   display: flex;
   align-items: flex-start;
   padding-top: 6px;
-  z-index: 100;
+  z-index: 180;
 }
 
 .tab-item {
@@ -302,26 +307,51 @@ body {
 
 /* --- Content Area --- */
 .page-content {
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  overflow-y: auto;
+  position: relative;
+  top: auto !important;
+  left: auto;
+  right: auto;
+  bottom: auto;
+  overflow: visible;
   -webkit-overflow-scrolling: touch;
-  padding-bottom: var(--content-bottom);
+  padding-bottom: calc(var(--content-bottom) + 12px);
+  flex: 1 1 auto;
 }
 
 .page-content.with-nav {
-  top: calc(var(--safe-top) + var(--nav-height));
+  top: auto !important;
 }
 
 .page-content.with-large-title {
-  top: 0;
+  top: auto !important;
 }
 
 .scroll-content {
   padding: 0 0 20px;
+  display: block;
+}
+
+.top-region {
+  position: relative;
+  z-index: 130;
+}
+
+.content-region {
+  position: relative;
+  flex: 1 1 auto;
+  min-height: 0;
+}
+
+.bottom-region {
+  position: relative;
+  z-index: 150;
+}
+
+.kl-stage-nav,
+.mt-stage-nav {
+  position: sticky;
+  top: var(--nav-height);
+  z-index: 135;
 }
 
 /* --- Sub-tabs (Segmented Control) --- */
@@ -378,12 +408,16 @@ body {
   font-size: var(--font-base);
   font-weight: 600;
   color: var(--text-primary);
+  overflow-wrap: anywhere;
+  word-break: break-word;
 }
 
 .card-subtitle {
   font-size: var(--font-sm);
   color: var(--text-secondary);
   margin-top: 2px;
+  overflow-wrap: anywhere;
+  word-break: break-word;
 }
 
 .card-arrow {
@@ -459,6 +493,9 @@ body {
   background: var(--gray-100);
   padding: 2px 8px;
   border-radius: var(--radius-full);
+  max-width: 100%;
+  overflow-wrap: anywhere;
+  word-break: break-word;
 }
 
 /* --- List Items (iOS Settings style) --- */
@@ -510,12 +547,16 @@ body {
 .list-item .list-label {
   font-size: var(--font-md);
   color: var(--text-primary);
+  overflow-wrap: anywhere;
+  word-break: break-word;
 }
 
 .list-item .list-desc {
   font-size: var(--font-sm);
   color: var(--text-secondary);
   margin-top: 1px;
+  overflow-wrap: anywhere;
+  word-break: break-word;
 }
 
 .list-item .list-chevron {
@@ -612,6 +653,11 @@ body {
   padding: 8px 16px;
   border-radius: var(--radius-md);
   width: auto;
+  max-width: 100%;
+  white-space: normal;
+  text-align: left;
+  overflow-wrap: anywhere;
+  word-break: break-word;
 }
 
 .btn-text {
@@ -732,6 +778,8 @@ body {
   font-size: var(--font-base);
   line-height: 1.4;
   animation: fadeInUp 0.3s ease;
+  overflow-wrap: anywhere;
+  word-break: break-word;
 }
 
 .chat-bubble.ai {
@@ -749,7 +797,7 @@ body {
 }
 
 .chat-input-bar {
-  position: absolute;
+  position: fixed;
   bottom: calc(var(--tab-height) + var(--safe-bottom));
   left: 0;
   right: 0;
@@ -805,7 +853,7 @@ body {
 
 /* --- Floating Action Button --- */
 .fab {
-  position: absolute;
+  position: fixed;
   right: 20px;
   bottom: calc(var(--content-bottom) + 16px);
   width: 56px;
@@ -829,7 +877,7 @@ body {
 
 /* --- Bottom Sheet (Modal) --- */
 .modal-overlay {
-  position: absolute;
+  position: fixed;
   inset: 0;
   background: rgba(0,0,0,0.3);
   z-index: 200;
@@ -873,21 +921,38 @@ body {
   display: flex;
   gap: 12px;
   padding: 0 16px;
+  min-width: 0;
+  flex-wrap: wrap;
 }
 
 .stat-card {
-  flex: 1;
+  flex: 1 1 calc(33.333% - 8px);
   background: var(--bg-card);
   border-radius: var(--radius-lg);
   padding: 16px;
   box-shadow: var(--shadow-card);
   text-align: center;
+  min-width: 90px;
+}
+
+[data-role="quick-options"] .btn.btn-sm {
+  flex: 1 1 140px !important;
+  min-width: 0 !important;
+  max-width: 100% !important;
 }
 
 .stat-value {
   font-size: var(--font-2xl);
   font-weight: 700;
   color: var(--text-primary);
+  overflow-wrap: anywhere;
+  word-break: break-word;
+}
+
+.score-big,
+.score-unit {
+  overflow-wrap: anywhere;
+  word-break: break-word;
 }
 
 .stat-label {
@@ -1209,6 +1274,30 @@ body {
 .w-full { width: 100%; }
 .hidden { display: none; }
 
+/* --- Overflow Guards --- */
+.u-ellipsis-1 {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.u-clamp-2 {
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.u-wrap-break {
+  white-space: normal;
+  overflow-wrap: anywhere;
+  word-break: break-word;
+}
+
+.u-num-tabular {
+  font-variant-numeric: tabular-nums;
+}
+
 /* --- Animations --- */
 @keyframes fadeInUp {
   from { opacity: 0; transform: translateY(10px); }
@@ -1473,3 +1562,22 @@ body {
 /* --- Scrollbar Hide --- */
 .page-content::-webkit-scrollbar { display: none; }
 .page-content { -ms-overflow-style: none; scrollbar-width: none; }
+
+@media (max-width: 480px) {
+  body {
+    background: var(--bg-secondary) !important;
+    display: block !important;
+    min-height: 100dvh !important;
+    margin: 0 !important;
+  }
+
+  .phone-frame {
+    width: 100vw;
+    min-width: 0;
+    height: 100dvh;
+    min-height: 0;
+    max-height: none;
+    border-radius: 0;
+    box-shadow: none;
+  }
+}
