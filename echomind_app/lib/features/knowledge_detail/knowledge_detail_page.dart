@@ -23,7 +23,7 @@ class KnowledgeDetailPage extends StatelessWidget {
                 children: [
                   MasteryDashboardWidget(kpId: kpId),
                   SizedBox(height: 20),
-                  ConceptTestRecordsWidget(),
+                  ConceptTestRecordsWidget(kpId: kpId),
                   SizedBox(height: 20),
                   RelatedModelsWidget(kpId: kpId),
                 ],
