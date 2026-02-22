@@ -20,6 +20,8 @@ services:
       DATABASE_URL: postgresql+asyncpg://postgres:postgres@db:5432/echomind
     depends_on:
       - db
+    volumes:
+      - ./backend/uploads:/app/uploads
 
 volumes:
   pgdata:

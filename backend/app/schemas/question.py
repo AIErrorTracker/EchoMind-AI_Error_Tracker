@@ -4,7 +4,7 @@ from pydantic import BaseModel
 
 
 class QuestionUploadRequest(BaseModel):
-    image_url: str
+    image_url: str | None = None
     is_correct: bool | None = None
     source: str = "manual"
 
