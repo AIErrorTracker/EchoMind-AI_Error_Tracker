@@ -1,0 +1,1592 @@
+{
+  "generated_at": "2026-02-21T13:35:00.724000+00:00",
+  "base_url": "http://localhost:5500",
+  "mock": "baseline",
+  "seed": 20260220,
+  "viewports": [
+    {
+      "name": "390x844",
+      "width": 390,
+      "height": 844
+    },
+    {
+      "name": "430x932",
+      "width": 430,
+      "height": 932
+    },
+    {
+      "name": "834x1194",
+      "width": 834,
+      "height": 1194
+    }
+  ],
+  "capture_specs": [
+    {
+      "page_id": "index",
+      "route_id": "home",
+      "viewports": [
+        "390x844",
+        "430x932",
+        "834x1194"
+      ],
+      "component_ids": [
+        "top-frame",
+        "top-dashboard",
+        "recommendation-list",
+        "recent-upload",
+        "action-overlay"
+      ],
+      "state_scenarios": []
+    },
+    {
+      "page_id": "community",
+      "route_id": "community",
+      "viewports": [
+        "390x844",
+        "430x932",
+        "834x1194"
+      ],
+      "component_ids": [
+        "top-frame-and-tabs",
+        "board-my-requests",
+        "board-feature-boost",
+        "board-feedback"
+      ],
+      "state_scenarios": [
+        {
+          "scenario_id": "tab-0",
+          "action_js": "window.switchCommTab && window.switchCommTab(0)",
+          "target_components": [
+            "board-my-requests"
+          ],
+          "wait_ms": 350
+        },
+        {
+          "scenario_id": "tab-1",
+          "action_js": "window.switchCommTab && window.switchCommTab(1)",
+          "target_components": [
+            "board-feature-boost"
+          ],
+          "wait_ms": 350
+        },
+        {
+          "scenario_id": "tab-2",
+          "action_js": "window.switchCommTab && window.switchCommTab(2)",
+          "target_components": [
+            "board-feedback"
+          ],
+          "wait_ms": 350
+        }
+      ]
+    },
+    {
+      "page_id": "memory",
+      "route_id": "memory",
+      "viewports": [
+        "390x844",
+        "430x932",
+        "834x1194"
+      ],
+      "component_ids": [
+        "top-frame",
+        "review-dashboard",
+        "card-category-list"
+      ],
+      "state_scenarios": []
+    },
+    {
+      "page_id": "profile",
+      "route_id": "profile",
+      "viewports": [
+        "390x844",
+        "430x932",
+        "834x1194"
+      ],
+      "component_ids": [
+        "top-frame",
+        "user-info-card",
+        "target-score-card",
+        "three-row-navigation",
+        "two-row-navigation",
+        "learning-stats"
+      ],
+      "state_scenarios": []
+    },
+    {
+      "page_id": "global-knowledge",
+      "route_id": "globalKnowledge",
+      "viewports": [
+        "390x844",
+        "430x932",
+        "834x1194"
+      ],
+      "component_ids": [
+        "top-frame",
+        "knowledge-tree"
+      ],
+      "state_scenarios": []
+    },
+    {
+      "page_id": "global-model",
+      "route_id": "globalModel",
+      "viewports": [
+        "390x844",
+        "430x932",
+        "834x1194"
+      ],
+      "component_ids": [
+        "top-frame",
+        "model-tree"
+      ],
+      "state_scenarios": []
+    },
+    {
+      "page_id": "global-exam",
+      "route_id": "globalExam",
+      "viewports": [
+        "390x844",
+        "430x932",
+        "834x1194"
+      ],
+      "component_ids": [
+        "top-frame",
+        "exam-heatmap",
+        "question-type-browser",
+        "recent-exams"
+      ],
+      "state_scenarios": []
+    },
+    {
+      "page_id": "ai-diagnosis",
+      "route_id": "aiDiagnosis",
+      "viewports": [
+        "390x844",
+        "430x932",
+        "834x1194"
+      ],
+      "component_ids": [
+        "top-frame",
+        "main-content",
+        "action-overlay"
+      ],
+      "state_scenarios": []
+    },
+    {
+      "page_id": "flashcard-review",
+      "route_id": "flashcardReview",
+      "viewports": [
+        "390x844",
+        "430x932",
+        "834x1194"
+      ],
+      "component_ids": [
+        "top-frame",
+        "flashcard"
+      ],
+      "state_scenarios": []
+    },
+    {
+      "page_id": "knowledge-detail",
+      "route_id": "knowledgeDetail",
+      "viewports": [
+        "390x844",
+        "430x932",
+        "834x1194"
+      ],
+      "component_ids": [
+        "top-frame",
+        "mastery-dashboard",
+        "concept-test-records",
+        "related-models"
+      ],
+      "state_scenarios": []
+    },
+    {
+      "page_id": "knowledge-learning",
+      "route_id": "knowledgeLearning",
+      "viewports": [
+        "390x844",
+        "430x932",
+        "834x1194"
+      ],
+      "component_ids": [
+        "top-frame",
+        "step-stage-nav",
+        "learning-dialogue",
+        "step-1-concept-present",
+        "step-2-understanding-check",
+        "step-3-discrimination-training",
+        "step-4-practical-application",
+        "step-5-concept-test",
+        "action-overlay"
+      ],
+      "state_scenarios": [
+        {
+          "scenario_id": "step-1",
+          "action_js": "window.switchKnowledgeLearningStep && window.switchKnowledgeLearningStep(1)",
+          "target_components": [
+            "step-1-concept-present"
+          ],
+          "wait_ms": 350
+        },
+        {
+          "scenario_id": "step-2",
+          "action_js": "window.switchKnowledgeLearningStep && window.switchKnowledgeLearningStep(2)",
+          "target_components": [
+            "step-2-understanding-check"
+          ],
+          "wait_ms": 350
+        },
+        {
+          "scenario_id": "step-3",
+          "action_js": "window.switchKnowledgeLearningStep && window.switchKnowledgeLearningStep(3)",
+          "target_components": [
+            "step-3-discrimination-training"
+          ],
+          "wait_ms": 350
+        },
+        {
+          "scenario_id": "step-4",
+          "action_js": "window.switchKnowledgeLearningStep && window.switchKnowledgeLearningStep(4)",
+          "target_components": [
+            "step-4-practical-application"
+          ],
+          "wait_ms": 350
+        },
+        {
+          "scenario_id": "step-5",
+          "action_js": "window.switchKnowledgeLearningStep && window.switchKnowledgeLearningStep(5)",
+          "target_components": [
+            "step-5-concept-test"
+          ],
+          "wait_ms": 350
+        }
+      ]
+    },
+    {
+      "page_id": "model-detail",
+      "route_id": "modelDetail",
+      "viewports": [
+        "390x844",
+        "430x932",
+        "834x1194"
+      ],
+      "component_ids": [
+        "top-frame",
+        "mastery-dashboard",
+        "prerequisite-knowledge-list",
+        "related-question-list",
+        "training-record-list"
+      ],
+      "state_scenarios": []
+    },
+    {
+      "page_id": "model-training",
+      "route_id": "modelTraining",
+      "viewports": [
+        "390x844",
+        "430x932",
+        "834x1194"
+      ],
+      "component_ids": [
+        "top-frame",
+        "step-stage-nav",
+        "training-dialogue",
+        "step-1-identification-training",
+        "step-2-decision-training",
+        "step-3-equation-training",
+        "step-4-trap-analysis",
+        "step-5-complete-solve",
+        "step-6-variation-training",
+        "action-overlay"
+      ],
+      "state_scenarios": [
+        {
+          "scenario_id": "step-1",
+          "action_js": "window.switchModelTrainingStep && window.switchModelTrainingStep(1)",
+          "target_components": [
+            "step-1-identification-training"
+          ],
+          "wait_ms": 350
+        },
+        {
+          "scenario_id": "step-2",
+          "action_js": "window.switchModelTrainingStep && window.switchModelTrainingStep(2)",
+          "target_components": [
+            "step-2-decision-training"
+          ],
+          "wait_ms": 350
+        },
+        {
+          "scenario_id": "step-3",
+          "action_js": "window.switchModelTrainingStep && window.switchModelTrainingStep(3)",
+          "target_components": [
+            "step-3-equation-training"
+          ],
+          "wait_ms": 350
+        },
+        {
+          "scenario_id": "step-4",
+          "action_js": "window.switchModelTrainingStep && window.switchModelTrainingStep(4)",
+          "target_components": [
+            "step-4-trap-analysis"
+          ],
+          "wait_ms": 350
+        },
+        {
+          "scenario_id": "step-5",
+          "action_js": "window.switchModelTrainingStep && window.switchModelTrainingStep(5)",
+          "target_components": [
+            "step-5-complete-solve"
+          ],
+          "wait_ms": 350
+        },
+        {
+          "scenario_id": "step-6",
+          "action_js": "window.switchModelTrainingStep && window.switchModelTrainingStep(6)",
+          "target_components": [
+            "step-6-variation-training"
+          ],
+          "wait_ms": 350
+        }
+      ]
+    },
+    {
+      "page_id": "prediction-center",
+      "route_id": "predictionCenter",
+      "viewports": [
+        "390x844",
+        "430x932",
+        "834x1194"
+      ],
+      "component_ids": [
+        "top-frame",
+        "score-card",
+        "trend-card",
+        "score-path-table",
+        "priority-model-list"
+      ],
+      "state_scenarios": []
+    },
+    {
+      "page_id": "question-aggregate",
+      "route_id": "questionAggregate",
+      "viewports": [
+        "390x844",
+        "430x932",
+        "834x1194"
+      ],
+      "component_ids": [
+        "top-frame",
+        "single-question-dashboard",
+        "exam-analysis",
+        "question-history-list"
+      ],
+      "state_scenarios": []
+    },
+    {
+      "page_id": "question-detail",
+      "route_id": "questionDetail",
+      "viewports": [
+        "390x844",
+        "430x932",
+        "834x1194"
+      ],
+      "component_ids": [
+        "top-frame",
+        "question-content",
+        "answer-result",
+        "question-relations",
+        "question-source"
+      ],
+      "state_scenarios": []
+    },
+    {
+      "page_id": "upload-history",
+      "route_id": "uploadHistory",
+      "viewports": [
+        "390x844",
+        "430x932",
+        "834x1194"
+      ],
+      "component_ids": [
+        "top-frame",
+        "history-panel",
+        "history-filter",
+        "history-date-scroll",
+        "history-record-list"
+      ],
+      "state_scenarios": []
+    },
+    {
+      "page_id": "weekly-review",
+      "route_id": "weeklyReview",
+      "viewports": [
+        "390x844",
+        "430x932",
+        "834x1194"
+      ],
+      "component_ids": [
+        "top-frame",
+        "weekly-dashboard",
+        "score-change",
+        "weekly-progress",
+        "next-week-focus"
+      ],
+      "state_scenarios": []
+    },
+    {
+      "page_id": "upload-menu",
+      "route_id": "uploadMenu",
+      "viewports": [
+        "390x844",
+        "430x932",
+        "834x1194"
+      ],
+      "component_ids": [
+        "top-frame",
+        "main-content"
+      ],
+      "state_scenarios": []
+    },
+    {
+      "page_id": "register-strategy",
+      "route_id": "registerStrategy",
+      "viewports": [
+        "390x844",
+        "430x932",
+        "834x1194"
+      ],
+      "component_ids": [
+        "top-frame",
+        "main-content"
+      ],
+      "state_scenarios": []
+    }
+  ],
+  "pages": [
+    {
+      "page_id": "index",
+      "route_id": "home",
+      "components_runtime": [
+        "top-frame",
+        "top-dashboard",
+        "recommendation-list",
+        "recent-upload",
+        "action-overlay"
+      ],
+      "component_dirs": [
+        "action-overlay",
+        "recent-upload",
+        "recommendation-list",
+        "top-dashboard",
+        "top-frame"
+      ],
+      "unmounted_components": [],
+      "component_routes": {
+        "top-frame": [],
+        "top-dashboard": [
+          "modelTraining",
+          "predictionCenter"
+        ],
+        "recommendation-list": [
+          "aiDiagnosis"
+        ],
+        "recent-upload": [
+          "uploadHistory"
+        ],
+        "action-overlay": [
+          "uploadMenu"
+        ]
+      },
+      "artifacts": {
+        "full": {
+          "390x844": "docs/第一阶段_html细化/html截图验证/index/full/index__390x844__full.png",
+          "430x932": "docs/第一阶段_html细化/html截图验证/index/full/index__430x932__full.png",
+          "834x1194": "docs/第一阶段_html细化/html截图验证/index/full/index__834x1194__full.png"
+        },
+        "components": {
+          "default": {
+            "top-frame": "docs/第一阶段_html细化/html截图验证/index/components/top-frame__390x844.png",
+            "top-dashboard": "docs/第一阶段_html细化/html截图验证/index/components/top-dashboard__390x844.png",
+            "recommendation-list": "docs/第一阶段_html细化/html截图验证/index/components/recommendation-list__390x844.png",
+            "recent-upload": "docs/第一阶段_html细化/html截图验证/index/components/recent-upload__390x844.png",
+            "action-overlay": "docs/第一阶段_html细化/html截图验证/index/components/action-overlay__390x844.png"
+          },
+          "states": {}
+        },
+        "captured_components": [
+          "action-overlay",
+          "recent-upload",
+          "recommendation-list",
+          "top-dashboard",
+          "top-frame"
+        ],
+        "missing_components": []
+      },
+      "capture_errors": []
+    },
+    {
+      "page_id": "community",
+      "route_id": "community",
+      "components_runtime": [
+        "top-frame-and-tabs",
+        "board-my-requests",
+        "board-feature-boost",
+        "board-feedback"
+      ],
+      "component_dirs": [
+        "board-feature-boost",
+        "board-feedback",
+        "board-my-requests",
+        "top-frame-and-tabs"
+      ],
+      "unmounted_components": [],
+      "component_routes": {
+        "top-frame-and-tabs": [],
+        "board-my-requests": [],
+        "board-feature-boost": [],
+        "board-feedback": []
+      },
+      "artifacts": {
+        "full": {
+          "390x844": "docs/第一阶段_html细化/html截图验证/community/full/community__390x844__full.png",
+          "430x932": "docs/第一阶段_html细化/html截图验证/community/full/community__430x932__full.png",
+          "834x1194": "docs/第一阶段_html细化/html截图验证/community/full/community__834x1194__full.png"
+        },
+        "components": {
+          "default": {
+            "top-frame-and-tabs": "docs/第一阶段_html细化/html截图验证/community/components/top-frame-and-tabs__390x844.png",
+            "board-my-requests": "docs/第一阶段_html细化/html截图验证/community/components/board-my-requests__390x844.png"
+          },
+          "states": {
+            "tab-0": {
+              "board-my-requests": "docs/第一阶段_html细化/html截图验证/community/components/board-my-requests__state-tab-0__390x844.png"
+            },
+            "tab-1": {
+              "board-feature-boost": "docs/第一阶段_html细化/html截图验证/community/components/board-feature-boost__state-tab-1__390x844.png"
+            },
+            "tab-2": {
+              "board-feedback": "docs/第一阶段_html细化/html截图验证/community/components/board-feedback__state-tab-2__390x844.png"
+            }
+          }
+        },
+        "captured_components": [
+          "board-feature-boost",
+          "board-feedback",
+          "board-my-requests",
+          "top-frame-and-tabs"
+        ],
+        "missing_components": []
+      },
+      "capture_errors": [
+        {
+          "stage": "default",
+          "component_id": "board-feature-boost",
+          "reason": "候选节点存在但当前不可见"
+        },
+        {
+          "stage": "default",
+          "component_id": "board-feedback",
+          "reason": "候选节点存在但当前不可见"
+        }
+      ]
+    },
+    {
+      "page_id": "memory",
+      "route_id": "memory",
+      "components_runtime": [
+        "top-frame",
+        "review-dashboard",
+        "card-category-list"
+      ],
+      "component_dirs": [
+        "card-category-list",
+        "review-dashboard",
+        "top-frame"
+      ],
+      "unmounted_components": [],
+      "component_routes": {
+        "top-frame": [],
+        "review-dashboard": [
+          "flashcardReview"
+        ],
+        "card-category-list": []
+      },
+      "artifacts": {
+        "full": {
+          "390x844": "docs/第一阶段_html细化/html截图验证/memory/full/memory__390x844__full.png",
+          "430x932": "docs/第一阶段_html细化/html截图验证/memory/full/memory__430x932__full.png",
+          "834x1194": "docs/第一阶段_html细化/html截图验证/memory/full/memory__834x1194__full.png"
+        },
+        "components": {
+          "default": {
+            "top-frame": "docs/第一阶段_html细化/html截图验证/memory/components/top-frame__390x844.png",
+            "review-dashboard": "docs/第一阶段_html细化/html截图验证/memory/components/review-dashboard__390x844.png",
+            "card-category-list": "docs/第一阶段_html细化/html截图验证/memory/components/card-category-list__390x844.png"
+          },
+          "states": {}
+        },
+        "captured_components": [
+          "card-category-list",
+          "review-dashboard",
+          "top-frame"
+        ],
+        "missing_components": []
+      },
+      "capture_errors": []
+    },
+    {
+      "page_id": "profile",
+      "route_id": "profile",
+      "components_runtime": [
+        "top-frame",
+        "user-info-card",
+        "target-score-card",
+        "three-row-navigation",
+        "two-row-navigation",
+        "learning-stats"
+      ],
+      "component_dirs": [
+        "learning-stats",
+        "target-score-card",
+        "three-row-navigation",
+        "top-frame",
+        "two-row-navigation",
+        "user-info-card"
+      ],
+      "unmounted_components": [],
+      "component_routes": {
+        "top-frame": [],
+        "user-info-card": [],
+        "target-score-card": [],
+        "three-row-navigation": [
+          "registerStrategy",
+          "uploadHistory",
+          "weeklyReview"
+        ],
+        "two-row-navigation": [],
+        "learning-stats": []
+      },
+      "artifacts": {
+        "full": {
+          "390x844": "docs/第一阶段_html细化/html截图验证/profile/full/profile__390x844__full.png",
+          "430x932": "docs/第一阶段_html细化/html截图验证/profile/full/profile__430x932__full.png",
+          "834x1194": "docs/第一阶段_html细化/html截图验证/profile/full/profile__834x1194__full.png"
+        },
+        "components": {
+          "default": {
+            "top-frame": "docs/第一阶段_html细化/html截图验证/profile/components/top-frame__390x844.png",
+            "user-info-card": "docs/第一阶段_html细化/html截图验证/profile/components/user-info-card__390x844.png",
+            "target-score-card": "docs/第一阶段_html细化/html截图验证/profile/components/target-score-card__390x844.png",
+            "three-row-navigation": "docs/第一阶段_html细化/html截图验证/profile/components/three-row-navigation__390x844.png",
+            "two-row-navigation": "docs/第一阶段_html细化/html截图验证/profile/components/two-row-navigation__390x844.png",
+            "learning-stats": "docs/第一阶段_html细化/html截图验证/profile/components/learning-stats__390x844.png"
+          },
+          "states": {}
+        },
+        "captured_components": [
+          "learning-stats",
+          "target-score-card",
+          "three-row-navigation",
+          "top-frame",
+          "two-row-navigation",
+          "user-info-card"
+        ],
+        "missing_components": []
+      },
+      "capture_errors": []
+    },
+    {
+      "page_id": "global-knowledge",
+      "route_id": "globalKnowledge",
+      "components_runtime": [
+        "top-frame",
+        "knowledge-tree"
+      ],
+      "component_dirs": [
+        "knowledge-tree",
+        "top-frame"
+      ],
+      "unmounted_components": [],
+      "component_routes": {
+        "top-frame": [
+          "globalExam",
+          "globalModel"
+        ],
+        "knowledge-tree": [
+          "knowledgeDetail"
+        ]
+      },
+      "artifacts": {
+        "full": {
+          "390x844": "docs/第一阶段_html细化/html截图验证/global-knowledge/full/global-knowledge__390x844__full.png",
+          "430x932": "docs/第一阶段_html细化/html截图验证/global-knowledge/full/global-knowledge__430x932__full.png",
+          "834x1194": "docs/第一阶段_html细化/html截图验证/global-knowledge/full/global-knowledge__834x1194__full.png"
+        },
+        "components": {
+          "default": {
+            "top-frame": "docs/第一阶段_html细化/html截图验证/global-knowledge/components/top-frame__390x844.png",
+            "knowledge-tree": "docs/第一阶段_html细化/html截图验证/global-knowledge/components/knowledge-tree__390x844.png"
+          },
+          "states": {}
+        },
+        "captured_components": [
+          "knowledge-tree",
+          "top-frame"
+        ],
+        "missing_components": []
+      },
+      "capture_errors": []
+    },
+    {
+      "page_id": "global-model",
+      "route_id": "globalModel",
+      "components_runtime": [
+        "top-frame",
+        "model-tree"
+      ],
+      "component_dirs": [
+        "model-tree",
+        "top-frame"
+      ],
+      "unmounted_components": [],
+      "component_routes": {
+        "top-frame": [
+          "globalExam",
+          "globalKnowledge"
+        ],
+        "model-tree": [
+          "modelDetail"
+        ]
+      },
+      "artifacts": {
+        "full": {
+          "390x844": "docs/第一阶段_html细化/html截图验证/global-model/full/global-model__390x844__full.png",
+          "430x932": "docs/第一阶段_html细化/html截图验证/global-model/full/global-model__430x932__full.png",
+          "834x1194": "docs/第一阶段_html细化/html截图验证/global-model/full/global-model__834x1194__full.png"
+        },
+        "components": {
+          "default": {
+            "top-frame": "docs/第一阶段_html细化/html截图验证/global-model/components/top-frame__390x844.png",
+            "model-tree": "docs/第一阶段_html细化/html截图验证/global-model/components/model-tree__390x844.png"
+          },
+          "states": {}
+        },
+        "captured_components": [
+          "model-tree",
+          "top-frame"
+        ],
+        "missing_components": []
+      },
+      "capture_errors": []
+    },
+    {
+      "page_id": "global-exam",
+      "route_id": "globalExam",
+      "components_runtime": [
+        "top-frame",
+        "exam-heatmap",
+        "question-type-browser",
+        "recent-exams"
+      ],
+      "component_dirs": [
+        "exam-heatmap",
+        "question-type-browser",
+        "recent-exams",
+        "top-frame"
+      ],
+      "unmounted_components": [],
+      "component_routes": {
+        "top-frame": [
+          "globalKnowledge",
+          "globalModel"
+        ],
+        "exam-heatmap": [
+          "questionAggregate"
+        ],
+        "question-type-browser": [
+          "questionAggregate",
+          "uploadMenu"
+        ],
+        "recent-exams": [
+          "uploadHistory"
+        ]
+      },
+      "artifacts": {
+        "full": {
+          "390x844": "docs/第一阶段_html细化/html截图验证/global-exam/full/global-exam__390x844__full.png",
+          "430x932": "docs/第一阶段_html细化/html截图验证/global-exam/full/global-exam__430x932__full.png",
+          "834x1194": "docs/第一阶段_html细化/html截图验证/global-exam/full/global-exam__834x1194__full.png"
+        },
+        "components": {
+          "default": {
+            "top-frame": "docs/第一阶段_html细化/html截图验证/global-exam/components/top-frame__390x844.png",
+            "exam-heatmap": "docs/第一阶段_html细化/html截图验证/global-exam/components/exam-heatmap__390x844.png",
+            "question-type-browser": "docs/第一阶段_html细化/html截图验证/global-exam/components/question-type-browser__390x844.png",
+            "recent-exams": "docs/第一阶段_html细化/html截图验证/global-exam/components/recent-exams__390x844.png"
+          },
+          "states": {}
+        },
+        "captured_components": [
+          "exam-heatmap",
+          "question-type-browser",
+          "recent-exams",
+          "top-frame"
+        ],
+        "missing_components": []
+      },
+      "capture_errors": []
+    },
+    {
+      "page_id": "ai-diagnosis",
+      "route_id": "aiDiagnosis",
+      "components_runtime": [
+        "top-frame",
+        "main-content",
+        "action-overlay"
+      ],
+      "component_dirs": [
+        "action-overlay",
+        "main-content",
+        "top-frame"
+      ],
+      "unmounted_components": [],
+      "component_routes": {
+        "top-frame": [
+          "questionDetail"
+        ],
+        "main-content": [
+          "modelTraining",
+          "questionDetail"
+        ],
+        "action-overlay": []
+      },
+      "artifacts": {
+        "full": {
+          "390x844": "docs/第一阶段_html细化/html截图验证/ai-diagnosis/full/ai-diagnosis__390x844__full.png",
+          "430x932": "docs/第一阶段_html细化/html截图验证/ai-diagnosis/full/ai-diagnosis__430x932__full.png",
+          "834x1194": "docs/第一阶段_html细化/html截图验证/ai-diagnosis/full/ai-diagnosis__834x1194__full.png"
+        },
+        "components": {
+          "default": {
+            "top-frame": "docs/第一阶段_html细化/html截图验证/ai-diagnosis/components/top-frame__390x844.png",
+            "main-content": "docs/第一阶段_html细化/html截图验证/ai-diagnosis/components/main-content__390x844.png",
+            "action-overlay": "docs/第一阶段_html细化/html截图验证/ai-diagnosis/components/action-overlay__390x844.png"
+          },
+          "states": {}
+        },
+        "captured_components": [
+          "action-overlay",
+          "main-content",
+          "top-frame"
+        ],
+        "missing_components": []
+      },
+      "capture_errors": []
+    },
+    {
+      "page_id": "flashcard-review",
+      "route_id": "flashcardReview",
+      "components_runtime": [
+        "top-frame",
+        "flashcard"
+      ],
+      "component_dirs": [
+        "flashcard",
+        "top-frame"
+      ],
+      "unmounted_components": [],
+      "component_routes": {
+        "top-frame": [
+          "memory"
+        ],
+        "flashcard": []
+      },
+      "artifacts": {
+        "full": {
+          "390x844": "docs/第一阶段_html细化/html截图验证/flashcard-review/full/flashcard-review__390x844__full.png",
+          "430x932": "docs/第一阶段_html细化/html截图验证/flashcard-review/full/flashcard-review__430x932__full.png",
+          "834x1194": "docs/第一阶段_html细化/html截图验证/flashcard-review/full/flashcard-review__834x1194__full.png"
+        },
+        "components": {
+          "default": {
+            "top-frame": "docs/第一阶段_html细化/html截图验证/flashcard-review/components/top-frame__390x844.png",
+            "flashcard": "docs/第一阶段_html细化/html截图验证/flashcard-review/components/flashcard__390x844.png"
+          },
+          "states": {}
+        },
+        "captured_components": [
+          "flashcard",
+          "top-frame"
+        ],
+        "missing_components": []
+      },
+      "capture_errors": []
+    },
+    {
+      "page_id": "knowledge-detail",
+      "route_id": "knowledgeDetail",
+      "components_runtime": [
+        "top-frame",
+        "mastery-dashboard",
+        "concept-test-records",
+        "related-models"
+      ],
+      "component_dirs": [
+        "concept-test-records",
+        "mastery-dashboard",
+        "related-models",
+        "top-frame"
+      ],
+      "unmounted_components": [],
+      "component_routes": {
+        "top-frame": [
+          "globalKnowledge"
+        ],
+        "mastery-dashboard": [
+          "knowledgeLearning"
+        ],
+        "concept-test-records": [],
+        "related-models": [
+          "modelDetail"
+        ]
+      },
+      "artifacts": {
+        "full": {
+          "390x844": "docs/第一阶段_html细化/html截图验证/knowledge-detail/full/knowledge-detail__390x844__full.png",
+          "430x932": "docs/第一阶段_html细化/html截图验证/knowledge-detail/full/knowledge-detail__430x932__full.png",
+          "834x1194": "docs/第一阶段_html细化/html截图验证/knowledge-detail/full/knowledge-detail__834x1194__full.png"
+        },
+        "components": {
+          "default": {
+            "top-frame": "docs/第一阶段_html细化/html截图验证/knowledge-detail/components/top-frame__390x844.png",
+            "mastery-dashboard": "docs/第一阶段_html细化/html截图验证/knowledge-detail/components/mastery-dashboard__390x844.png",
+            "concept-test-records": "docs/第一阶段_html细化/html截图验证/knowledge-detail/components/concept-test-records__390x844.png",
+            "related-models": "docs/第一阶段_html细化/html截图验证/knowledge-detail/components/related-models__390x844.png"
+          },
+          "states": {}
+        },
+        "captured_components": [
+          "concept-test-records",
+          "mastery-dashboard",
+          "related-models",
+          "top-frame"
+        ],
+        "missing_components": []
+      },
+      "capture_errors": []
+    },
+    {
+      "page_id": "knowledge-learning",
+      "route_id": "knowledgeLearning",
+      "components_runtime": [
+        "top-frame",
+        "step-stage-nav",
+        "learning-dialogue",
+        "step-1-concept-present",
+        "step-2-understanding-check",
+        "step-3-discrimination-training",
+        "step-4-practical-application",
+        "step-5-concept-test",
+        "action-overlay"
+      ],
+      "component_dirs": [
+        "action-overlay",
+        "learning-dialogue",
+        "step-1-concept-present",
+        "step-2-understanding-check",
+        "step-3-discrimination-training",
+        "step-4-practical-application",
+        "step-5-concept-test",
+        "step-stage-nav",
+        "top-frame"
+      ],
+      "unmounted_components": [],
+      "component_routes": {
+        "top-frame": [
+          "knowledgeDetail"
+        ],
+        "step-stage-nav": [],
+        "learning-dialogue": [],
+        "step-1-concept-present": [],
+        "step-2-understanding-check": [],
+        "step-3-discrimination-training": [],
+        "step-4-practical-application": [],
+        "step-5-concept-test": [],
+        "action-overlay": []
+      },
+      "artifacts": {
+        "full": {
+          "390x844": "docs/第一阶段_html细化/html截图验证/knowledge-learning/full/knowledge-learning__390x844__full.png",
+          "430x932": "docs/第一阶段_html细化/html截图验证/knowledge-learning/full/knowledge-learning__430x932__full.png",
+          "834x1194": "docs/第一阶段_html细化/html截图验证/knowledge-learning/full/knowledge-learning__834x1194__full.png"
+        },
+        "components": {
+          "default": {
+            "top-frame": "docs/第一阶段_html细化/html截图验证/knowledge-learning/components/top-frame__390x844.png",
+            "step-stage-nav": "docs/第一阶段_html细化/html截图验证/knowledge-learning/components/step-stage-nav__390x844.png",
+            "learning-dialogue": "docs/第一阶段_html细化/html截图验证/knowledge-learning/components/learning-dialogue__390x844.png",
+            "step-1-concept-present": "docs/第一阶段_html细化/html截图验证/knowledge-learning/components/step-1-concept-present__390x844.png",
+            "step-2-understanding-check": "docs/第一阶段_html细化/html截图验证/knowledge-learning/components/step-2-understanding-check__390x844.png",
+            "step-3-discrimination-training": "docs/第一阶段_html细化/html截图验证/knowledge-learning/components/step-3-discrimination-training__390x844.png",
+            "step-4-practical-application": "docs/第一阶段_html细化/html截图验证/knowledge-learning/components/step-4-practical-application__390x844.png",
+            "step-5-concept-test": "docs/第一阶段_html细化/html截图验证/knowledge-learning/components/step-5-concept-test__390x844.png",
+            "action-overlay": "docs/第一阶段_html细化/html截图验证/knowledge-learning/components/action-overlay__390x844.png"
+          },
+          "states": {
+            "step-1": {
+              "step-1-concept-present": "docs/第一阶段_html细化/html截图验证/knowledge-learning/components/step-1-concept-present__state-step-1__390x844.png"
+            },
+            "step-2": {
+              "step-2-understanding-check": "docs/第一阶段_html细化/html截图验证/knowledge-learning/components/step-2-understanding-check__state-step-2__390x844.png"
+            },
+            "step-3": {
+              "step-3-discrimination-training": "docs/第一阶段_html细化/html截图验证/knowledge-learning/components/step-3-discrimination-training__state-step-3__390x844.png"
+            },
+            "step-4": {
+              "step-4-practical-application": "docs/第一阶段_html细化/html截图验证/knowledge-learning/components/step-4-practical-application__state-step-4__390x844.png"
+            },
+            "step-5": {
+              "step-5-concept-test": "docs/第一阶段_html细化/html截图验证/knowledge-learning/components/step-5-concept-test__state-step-5__390x844.png"
+            }
+          }
+        },
+        "captured_components": [
+          "action-overlay",
+          "learning-dialogue",
+          "step-1-concept-present",
+          "step-2-understanding-check",
+          "step-3-discrimination-training",
+          "step-4-practical-application",
+          "step-5-concept-test",
+          "step-stage-nav",
+          "top-frame"
+        ],
+        "missing_components": []
+      },
+      "capture_errors": []
+    },
+    {
+      "page_id": "model-detail",
+      "route_id": "modelDetail",
+      "components_runtime": [
+        "top-frame",
+        "mastery-dashboard",
+        "prerequisite-knowledge-list",
+        "related-question-list",
+        "training-record-list"
+      ],
+      "component_dirs": [
+        "mastery-dashboard",
+        "prerequisite-knowledge-list",
+        "related-question-list",
+        "top-frame",
+        "training-record-list"
+      ],
+      "unmounted_components": [],
+      "component_routes": {
+        "top-frame": [
+          "globalModel"
+        ],
+        "mastery-dashboard": [
+          "modelTraining"
+        ],
+        "prerequisite-knowledge-list": [
+          "knowledgeDetail"
+        ],
+        "related-question-list": [
+          "questionDetail"
+        ],
+        "training-record-list": []
+      },
+      "artifacts": {
+        "full": {
+          "390x844": "docs/第一阶段_html细化/html截图验证/model-detail/full/model-detail__390x844__full.png",
+          "430x932": "docs/第一阶段_html细化/html截图验证/model-detail/full/model-detail__430x932__full.png",
+          "834x1194": "docs/第一阶段_html细化/html截图验证/model-detail/full/model-detail__834x1194__full.png"
+        },
+        "components": {
+          "default": {
+            "top-frame": "docs/第一阶段_html细化/html截图验证/model-detail/components/top-frame__390x844.png",
+            "mastery-dashboard": "docs/第一阶段_html细化/html截图验证/model-detail/components/mastery-dashboard__390x844.png",
+            "prerequisite-knowledge-list": "docs/第一阶段_html细化/html截图验证/model-detail/components/prerequisite-knowledge-list__390x844.png",
+            "related-question-list": "docs/第一阶段_html细化/html截图验证/model-detail/components/related-question-list__390x844.png",
+            "training-record-list": "docs/第一阶段_html细化/html截图验证/model-detail/components/training-record-list__390x844.png"
+          },
+          "states": {}
+        },
+        "captured_components": [
+          "mastery-dashboard",
+          "prerequisite-knowledge-list",
+          "related-question-list",
+          "top-frame",
+          "training-record-list"
+        ],
+        "missing_components": []
+      },
+      "capture_errors": []
+    },
+    {
+      "page_id": "model-training",
+      "route_id": "modelTraining",
+      "components_runtime": [
+        "top-frame",
+        "step-stage-nav",
+        "training-dialogue",
+        "step-1-identification-training",
+        "step-2-decision-training",
+        "step-3-equation-training",
+        "step-4-trap-analysis",
+        "step-5-complete-solve",
+        "step-6-variation-training",
+        "action-overlay"
+      ],
+      "component_dirs": [
+        "action-overlay",
+        "step-1-identification-training",
+        "step-2-decision-training",
+        "step-3-equation-training",
+        "step-4-trap-analysis",
+        "step-5-complete-solve",
+        "step-6-variation-training",
+        "step-stage-nav",
+        "top-frame",
+        "training-dialogue"
+      ],
+      "unmounted_components": [],
+      "component_routes": {
+        "top-frame": [
+          "modelDetail"
+        ],
+        "step-stage-nav": [],
+        "training-dialogue": [],
+        "step-1-identification-training": [],
+        "step-2-decision-training": [],
+        "step-3-equation-training": [],
+        "step-4-trap-analysis": [],
+        "step-5-complete-solve": [],
+        "step-6-variation-training": [],
+        "action-overlay": []
+      },
+      "artifacts": {
+        "full": {
+          "390x844": "docs/第一阶段_html细化/html截图验证/model-training/full/model-training__390x844__full.png",
+          "430x932": "docs/第一阶段_html细化/html截图验证/model-training/full/model-training__430x932__full.png",
+          "834x1194": "docs/第一阶段_html细化/html截图验证/model-training/full/model-training__834x1194__full.png"
+        },
+        "components": {
+          "default": {
+            "top-frame": "docs/第一阶段_html细化/html截图验证/model-training/components/top-frame__390x844.png",
+            "step-stage-nav": "docs/第一阶段_html细化/html截图验证/model-training/components/step-stage-nav__390x844.png",
+            "training-dialogue": "docs/第一阶段_html细化/html截图验证/model-training/components/training-dialogue__390x844.png",
+            "step-1-identification-training": "docs/第一阶段_html细化/html截图验证/model-training/components/step-1-identification-training__390x844.png",
+            "step-2-decision-training": "docs/第一阶段_html细化/html截图验证/model-training/components/step-2-decision-training__390x844.png",
+            "step-3-equation-training": "docs/第一阶段_html细化/html截图验证/model-training/components/step-3-equation-training__390x844.png",
+            "step-4-trap-analysis": "docs/第一阶段_html细化/html截图验证/model-training/components/step-4-trap-analysis__390x844.png",
+            "step-5-complete-solve": "docs/第一阶段_html细化/html截图验证/model-training/components/step-5-complete-solve__390x844.png",
+            "step-6-variation-training": "docs/第一阶段_html细化/html截图验证/model-training/components/step-6-variation-training__390x844.png",
+            "action-overlay": "docs/第一阶段_html细化/html截图验证/model-training/components/action-overlay__390x844.png"
+          },
+          "states": {
+            "step-1": {
+              "step-1-identification-training": "docs/第一阶段_html细化/html截图验证/model-training/components/step-1-identification-training__state-step-1__390x844.png"
+            },
+            "step-2": {
+              "step-2-decision-training": "docs/第一阶段_html细化/html截图验证/model-training/components/step-2-decision-training__state-step-2__390x844.png"
+            },
+            "step-3": {
+              "step-3-equation-training": "docs/第一阶段_html细化/html截图验证/model-training/components/step-3-equation-training__state-step-3__390x844.png"
+            },
+            "step-4": {
+              "step-4-trap-analysis": "docs/第一阶段_html细化/html截图验证/model-training/components/step-4-trap-analysis__state-step-4__390x844.png"
+            },
+            "step-5": {
+              "step-5-complete-solve": "docs/第一阶段_html细化/html截图验证/model-training/components/step-5-complete-solve__state-step-5__390x844.png"
+            },
+            "step-6": {
+              "step-6-variation-training": "docs/第一阶段_html细化/html截图验证/model-training/components/step-6-variation-training__state-step-6__390x844.png"
+            }
+          }
+        },
+        "captured_components": [
+          "action-overlay",
+          "step-1-identification-training",
+          "step-2-decision-training",
+          "step-3-equation-training",
+          "step-4-trap-analysis",
+          "step-5-complete-solve",
+          "step-6-variation-training",
+          "step-stage-nav",
+          "top-frame",
+          "training-dialogue"
+        ],
+        "missing_components": []
+      },
+      "capture_errors": []
+    },
+    {
+      "page_id": "prediction-center",
+      "route_id": "predictionCenter",
+      "components_runtime": [
+        "top-frame",
+        "score-card",
+        "trend-card",
+        "score-path-table",
+        "priority-model-list"
+      ],
+      "component_dirs": [
+        "priority-model-list",
+        "score-card",
+        "score-path-table",
+        "top-frame",
+        "trend-card"
+      ],
+      "unmounted_components": [],
+      "component_routes": {
+        "top-frame": [
+          "home"
+        ],
+        "score-card": [],
+        "trend-card": [],
+        "score-path-table": [
+          "questionAggregate"
+        ],
+        "priority-model-list": [
+          "modelDetail"
+        ]
+      },
+      "artifacts": {
+        "full": {
+          "390x844": "docs/第一阶段_html细化/html截图验证/prediction-center/full/prediction-center__390x844__full.png",
+          "430x932": "docs/第一阶段_html细化/html截图验证/prediction-center/full/prediction-center__430x932__full.png",
+          "834x1194": "docs/第一阶段_html细化/html截图验证/prediction-center/full/prediction-center__834x1194__full.png"
+        },
+        "components": {
+          "default": {
+            "top-frame": "docs/第一阶段_html细化/html截图验证/prediction-center/components/top-frame__390x844.png",
+            "score-card": "docs/第一阶段_html细化/html截图验证/prediction-center/components/score-card__390x844.png",
+            "trend-card": "docs/第一阶段_html细化/html截图验证/prediction-center/components/trend-card__390x844.png",
+            "score-path-table": "docs/第一阶段_html细化/html截图验证/prediction-center/components/score-path-table__390x844.png",
+            "priority-model-list": "docs/第一阶段_html细化/html截图验证/prediction-center/components/priority-model-list__390x844.png"
+          },
+          "states": {}
+        },
+        "captured_components": [
+          "priority-model-list",
+          "score-card",
+          "score-path-table",
+          "top-frame",
+          "trend-card"
+        ],
+        "missing_components": []
+      },
+      "capture_errors": []
+    },
+    {
+      "page_id": "question-aggregate",
+      "route_id": "questionAggregate",
+      "components_runtime": [
+        "top-frame",
+        "single-question-dashboard",
+        "exam-analysis",
+        "question-history-list"
+      ],
+      "component_dirs": [
+        "exam-analysis",
+        "question-history-list",
+        "single-question-dashboard",
+        "top-frame"
+      ],
+      "unmounted_components": [],
+      "component_routes": {
+        "top-frame": [
+          "globalExam"
+        ],
+        "single-question-dashboard": [],
+        "exam-analysis": [],
+        "question-history-list": [
+          "questionDetail"
+        ]
+      },
+      "artifacts": {
+        "full": {
+          "390x844": "docs/第一阶段_html细化/html截图验证/question-aggregate/full/question-aggregate__390x844__full.png",
+          "430x932": "docs/第一阶段_html细化/html截图验证/question-aggregate/full/question-aggregate__430x932__full.png",
+          "834x1194": "docs/第一阶段_html细化/html截图验证/question-aggregate/full/question-aggregate__834x1194__full.png"
+        },
+        "components": {
+          "default": {
+            "top-frame": "docs/第一阶段_html细化/html截图验证/question-aggregate/components/top-frame__390x844.png",
+            "single-question-dashboard": "docs/第一阶段_html细化/html截图验证/question-aggregate/components/single-question-dashboard__390x844.png",
+            "exam-analysis": "docs/第一阶段_html细化/html截图验证/question-aggregate/components/exam-analysis__390x844.png",
+            "question-history-list": "docs/第一阶段_html细化/html截图验证/question-aggregate/components/question-history-list__390x844.png"
+          },
+          "states": {}
+        },
+        "captured_components": [
+          "exam-analysis",
+          "question-history-list",
+          "single-question-dashboard",
+          "top-frame"
+        ],
+        "missing_components": []
+      },
+      "capture_errors": []
+    },
+    {
+      "page_id": "question-detail",
+      "route_id": "questionDetail",
+      "components_runtime": [
+        "top-frame",
+        "question-content",
+        "answer-result",
+        "question-relations",
+        "question-source"
+      ],
+      "component_dirs": [
+        "answer-result",
+        "question-content",
+        "question-relations",
+        "question-source",
+        "top-frame"
+      ],
+      "unmounted_components": [],
+      "component_routes": {
+        "top-frame": [
+          "questionAggregate"
+        ],
+        "question-content": [],
+        "answer-result": [
+          "aiDiagnosis"
+        ],
+        "question-relations": [
+          "knowledgeDetail",
+          "modelDetail"
+        ],
+        "question-source": []
+      },
+      "artifacts": {
+        "full": {
+          "390x844": "docs/第一阶段_html细化/html截图验证/question-detail/full/question-detail__390x844__full.png",
+          "430x932": "docs/第一阶段_html细化/html截图验证/question-detail/full/question-detail__430x932__full.png",
+          "834x1194": "docs/第一阶段_html细化/html截图验证/question-detail/full/question-detail__834x1194__full.png"
+        },
+        "components": {
+          "default": {
+            "top-frame": "docs/第一阶段_html细化/html截图验证/question-detail/components/top-frame__390x844.png",
+            "question-content": "docs/第一阶段_html细化/html截图验证/question-detail/components/question-content__390x844.png",
+            "answer-result": "docs/第一阶段_html细化/html截图验证/question-detail/components/answer-result__390x844.png",
+            "question-relations": "docs/第一阶段_html细化/html截图验证/question-detail/components/question-relations__390x844.png",
+            "question-source": "docs/第一阶段_html细化/html截图验证/question-detail/components/question-source__390x844.png"
+          },
+          "states": {}
+        },
+        "captured_components": [
+          "answer-result",
+          "question-content",
+          "question-relations",
+          "question-source",
+          "top-frame"
+        ],
+        "missing_components": []
+      },
+      "capture_errors": []
+    },
+    {
+      "page_id": "upload-history",
+      "route_id": "uploadHistory",
+      "components_runtime": [
+        "top-frame",
+        "history-panel",
+        "history-filter",
+        "history-date-scroll",
+        "history-record-list"
+      ],
+      "component_dirs": [
+        "history-date-scroll",
+        "history-filter",
+        "history-panel",
+        "history-record-list",
+        "history-timeline",
+        "top-frame"
+      ],
+      "unmounted_components": [
+        "history-timeline"
+      ],
+      "component_routes": {
+        "top-frame": [
+          "home"
+        ],
+        "history-panel": [],
+        "history-filter": [],
+        "history-date-scroll": [],
+        "history-record-list": [
+          "questionDetail"
+        ]
+      },
+      "artifacts": {
+        "full": {
+          "390x844": "docs/第一阶段_html细化/html截图验证/upload-history/full/upload-history__390x844__full.png",
+          "430x932": "docs/第一阶段_html细化/html截图验证/upload-history/full/upload-history__430x932__full.png",
+          "834x1194": "docs/第一阶段_html细化/html截图验证/upload-history/full/upload-history__834x1194__full.png"
+        },
+        "components": {
+          "default": {
+            "top-frame": "docs/第一阶段_html细化/html截图验证/upload-history/components/top-frame__390x844.png",
+            "history-panel": "docs/第一阶段_html细化/html截图验证/upload-history/components/history-panel__390x844.png",
+            "history-filter": "docs/第一阶段_html细化/html截图验证/upload-history/components/history-filter__390x844.png",
+            "history-date-scroll": "docs/第一阶段_html细化/html截图验证/upload-history/components/history-date-scroll__390x844.png",
+            "history-record-list": "docs/第一阶段_html细化/html截图验证/upload-history/components/history-record-list__390x844.png"
+          },
+          "states": {}
+        },
+        "captured_components": [
+          "history-date-scroll",
+          "history-filter",
+          "history-panel",
+          "history-record-list",
+          "top-frame"
+        ],
+        "missing_components": []
+      },
+      "capture_errors": []
+    },
+    {
+      "page_id": "weekly-review",
+      "route_id": "weeklyReview",
+      "components_runtime": [
+        "top-frame",
+        "weekly-dashboard",
+        "score-change",
+        "weekly-progress",
+        "next-week-focus"
+      ],
+      "component_dirs": [
+        "next-week-focus",
+        "score-change",
+        "top-frame",
+        "weekly-dashboard",
+        "weekly-progress"
+      ],
+      "unmounted_components": [],
+      "component_routes": {
+        "top-frame": [
+          "profile"
+        ],
+        "weekly-dashboard": [],
+        "score-change": [],
+        "weekly-progress": [],
+        "next-week-focus": []
+      },
+      "artifacts": {
+        "full": {
+          "390x844": "docs/第一阶段_html细化/html截图验证/weekly-review/full/weekly-review__390x844__full.png",
+          "430x932": "docs/第一阶段_html细化/html截图验证/weekly-review/full/weekly-review__430x932__full.png",
+          "834x1194": "docs/第一阶段_html细化/html截图验证/weekly-review/full/weekly-review__834x1194__full.png"
+        },
+        "components": {
+          "default": {
+            "top-frame": "docs/第一阶段_html细化/html截图验证/weekly-review/components/top-frame__390x844.png",
+            "weekly-dashboard": "docs/第一阶段_html细化/html截图验证/weekly-review/components/weekly-dashboard__390x844.png",
+            "score-change": "docs/第一阶段_html细化/html截图验证/weekly-review/components/score-change__390x844.png",
+            "weekly-progress": "docs/第一阶段_html细化/html截图验证/weekly-review/components/weekly-progress__390x844.png",
+            "next-week-focus": "docs/第一阶段_html细化/html截图验证/weekly-review/components/next-week-focus__390x844.png"
+          },
+          "states": {}
+        },
+        "captured_components": [
+          "next-week-focus",
+          "score-change",
+          "top-frame",
+          "weekly-dashboard",
+          "weekly-progress"
+        ],
+        "missing_components": []
+      },
+      "capture_errors": []
+    },
+    {
+      "page_id": "upload-menu",
+      "route_id": "uploadMenu",
+      "components_runtime": [
+        "top-frame",
+        "main-content"
+      ],
+      "component_dirs": [
+        "main-content",
+        "top-frame"
+      ],
+      "unmounted_components": [],
+      "component_routes": {
+        "top-frame": [
+          "home"
+        ],
+        "main-content": [
+          "home"
+        ]
+      },
+      "artifacts": {
+        "full": {
+          "390x844": "docs/第一阶段_html细化/html截图验证/upload-menu/full/upload-menu__390x844__full.png",
+          "430x932": "docs/第一阶段_html细化/html截图验证/upload-menu/full/upload-menu__430x932__full.png",
+          "834x1194": "docs/第一阶段_html细化/html截图验证/upload-menu/full/upload-menu__834x1194__full.png"
+        },
+        "components": {
+          "default": {
+            "top-frame": "docs/第一阶段_html细化/html截图验证/upload-menu/components/top-frame__390x844.png",
+            "main-content": "docs/第一阶段_html细化/html截图验证/upload-menu/components/main-content__390x844.png"
+          },
+          "states": {}
+        },
+        "captured_components": [
+          "main-content",
+          "top-frame"
+        ],
+        "missing_components": []
+      },
+      "capture_errors": []
+    },
+    {
+      "page_id": "register-strategy",
+      "route_id": "registerStrategy",
+      "components_runtime": [
+        "top-frame",
+        "main-content"
+      ],
+      "component_dirs": [
+        "main-content",
+        "top-frame"
+      ],
+      "unmounted_components": [],
+      "component_routes": {
+        "top-frame": [
+          "profile"
+        ],
+        "main-content": [
+          "profile"
+        ]
+      },
+      "artifacts": {
+        "full": {
+          "390x844": "docs/第一阶段_html细化/html截图验证/register-strategy/full/register-strategy__390x844__full.png",
+          "430x932": "docs/第一阶段_html细化/html截图验证/register-strategy/full/register-strategy__430x932__full.png",
+          "834x1194": "docs/第一阶段_html细化/html截图验证/register-strategy/full/register-strategy__834x1194__full.png"
+        },
+        "components": {
+          "default": {
+            "top-frame": "docs/第一阶段_html细化/html截图验证/register-strategy/components/top-frame__390x844.png",
+            "main-content": "docs/第一阶段_html细化/html截图验证/register-strategy/components/main-content__390x844.png"
+          },
+          "states": {}
+        },
+        "captured_components": [
+          "main-content",
+          "top-frame"
+        ],
+        "missing_components": []
+      },
+      "capture_errors": []
+    }
+  ]
+}
