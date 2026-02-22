@@ -8,18 +8,16 @@ import 'package:echomind_app/providers/recommendations_provider.dart';
 class RecommendationListWidget extends ConsumerWidget {
   const RecommendationListWidget({super.key});
 
-  // Fallback mock data
   static const _mockItems = [
-    (icon: '!', color: Color(0xFF1C1C1E), title: '待诊断: 2025天津模拟 第5题', tags: ['待诊断', '上传于今日'], route: AppRoutes.aiDiagnosis),
-    (icon: 'L1', color: AppTheme.primary, title: '板块运动 -- 建模层训练', tags: ['本周错2次', '约5分钟'], route: AppRoutes.modelDetail),
-    (icon: 'KP', color: AppTheme.textSecondary, title: '库仑定律适用条件 -- 知识补强', tags: ['理解不深', '约3分钟'], route: AppRoutes.knowledgeDetail),
-    (icon: '~', color: AppTheme.primary, title: '牛顿第二定律应用 -- 不稳定', tags: ['掌握不稳定', '14天未练习'], route: AppRoutes.modelDetail),
+    (icon: '!', title: '待诊断: 2025天津模拟 第5题', tags: ['待诊断', '上传于今日'], route: AppRoutes.aiDiagnosis),
+    (icon: 'L1', title: '板块运动 -- 建模层训练', tags: ['本周错2次', '约5分钟'], route: AppRoutes.modelDetail),
+    (icon: 'KP', title: '库仑定律适用条件 -- 知识补强', tags: ['理解不深', '约3分钟'], route: AppRoutes.knowledgeDetail),
+    (icon: '~', title: '牛顿第二定律应用 -- 不稳定', tags: ['掌握不稳定', '14天未练习'], route: AppRoutes.modelDetail),
   ];
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final recs = ref.watch(recommendationsProvider);
-    final apiItems = recs.valueOrNull;
 
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 16),
@@ -28,19 +26,40 @@ class RecommendationListWidget extends ConsumerWidget {
         children: [
           const Text('推荐学习', style: TextStyle(fontSize: 18, fontWeight: FontWeight.w600)),
           const SizedBox(height: 8),
-          if (apiItems != null)
-            for (final item in apiItems)
-              _RecItem(
-                icon: item.icon, color: AppTheme.primary,
-                title: item.title, tags: item.tags,
-                onTap: () => context.push(item.route.isNotEmpty ? item.route : AppRoutes.modelDetail),
-              )
-          else
-            for (final item in _mockItems)
-              _RecItem(icon: item.icon, color: item.color, title: item.title, tags: item.tags, onTap: () => context.push(item.route)),
+          recs.when(
+            loading: () => const Center(child: Padding(padding: EdgeInsets.all(16), child: CircularProgressIndicator())),
+            error: (_, __) => _buildMockList(context),
+            data: (items) => items.isEmpty ? _buildMockList(context) : _buildApiList(context, items),
+          ),
         ],
       ),
     );
+  }
+
+  Widget _buildApiList(BuildContext context, List<RecommendationItem> items) {
+    return Column(children: [
+      for (final item in items)
+        _RecItem(
+          icon: item.targetType == 'knowledge' ? 'KP' : 'L${item.currentLevel}',
+          color: item.isUnstable ? AppTheme.danger : AppTheme.primary,
+          title: item.targetName,
+          tags: [
+            if (item.errorCount > 0) '错${item.errorCount}次',
+            if (item.isUnstable) '不稳定',
+            'L${item.currentLevel}',
+          ],
+          onTap: () => context.push(
+            item.targetType == 'knowledge' ? AppRoutes.knowledgeDetail : AppRoutes.modelDetail,
+          ),
+        ),
+    ]);
+  }
+
+  Widget _buildMockList(BuildContext context) {
+    return Column(children: [
+      for (final item in _mockItems)
+        _RecItem(icon: item.icon, color: AppTheme.primary, title: item.title, tags: item.tags, onTap: () => context.push(item.route)),
+    ]);
   }
 }
 
@@ -60,31 +79,24 @@ class _RecItem extends StatelessWidget {
         margin: const EdgeInsets.only(bottom: 8),
         padding: const EdgeInsets.all(12),
         decoration: BoxDecoration(color: AppTheme.surface, borderRadius: BorderRadius.circular(AppTheme.radiusMd)),
-        child: Row(
-          children: [
-            Container(
-              width: 40, height: 40,
-              decoration: BoxDecoration(color: color.withValues(alpha: 0.12), borderRadius: BorderRadius.circular(10)),
-              alignment: Alignment.center,
-              child: Text(icon, style: TextStyle(fontSize: 14, fontWeight: FontWeight.bold, color: color)),
-            ),
-            const SizedBox(width: 12),
-            Expanded(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(title, style: const TextStyle(fontSize: 15, fontWeight: FontWeight.w500), maxLines: 1, overflow: TextOverflow.ellipsis),
-                  const SizedBox(height: 4),
-                  Wrap(
-                    spacing: 6,
-                    children: [for (final t in tags) _Tag(t)],
-                  ),
-                ],
-              ),
-            ),
-            const Icon(Icons.chevron_right, size: 20, color: AppTheme.textSecondary),
-          ],
-        ),
+        child: Row(children: [
+          Container(
+            width: 40, height: 40,
+            decoration: BoxDecoration(color: color.withValues(alpha: 0.12), borderRadius: BorderRadius.circular(10)),
+            alignment: Alignment.center,
+            child: Text(icon, style: TextStyle(fontSize: 14, fontWeight: FontWeight.bold, color: color)),
+          ),
+          const SizedBox(width: 12),
+          Expanded(child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(title, style: const TextStyle(fontSize: 15, fontWeight: FontWeight.w500), maxLines: 1, overflow: TextOverflow.ellipsis),
+              const SizedBox(height: 4),
+              Wrap(spacing: 6, children: [for (final t in tags) _Tag(t)]),
+            ],
+          )),
+          const Icon(Icons.chevron_right, size: 20, color: AppTheme.textSecondary),
+        ]),
       ),
     );
   }

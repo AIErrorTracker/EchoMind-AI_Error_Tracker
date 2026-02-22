@@ -35,3 +35,41 @@ class ModelChapterNode {
   factory ModelChapterNode.fromJson(Map<String, dynamic> json) =>
       _$ModelChapterNodeFromJson(json);
 }
+
+@JsonSerializable()
+class ModelDetail {
+  final String id;
+  final String name;
+  final String? description;
+  final String chapter;
+  final String section;
+  @JsonKey(name: 'prerequisite_kp_ids')
+  final List<String>? prerequisiteKpIds;
+  @JsonKey(name: 'confusion_group_ids')
+  final List<String>? confusionGroupIds;
+  @JsonKey(name: 'mastery_level')
+  final int? masteryLevel;
+  @JsonKey(name: 'mastery_value')
+  final double? masteryValue;
+  @JsonKey(name: 'error_count')
+  final int errorCount;
+  @JsonKey(name: 'correct_count')
+  final int correctCount;
+
+  const ModelDetail({
+    required this.id,
+    required this.name,
+    this.description,
+    required this.chapter,
+    required this.section,
+    this.prerequisiteKpIds,
+    this.confusionGroupIds,
+    this.masteryLevel,
+    this.masteryValue,
+    this.errorCount = 0,
+    this.correctCount = 0,
+  });
+
+  factory ModelDetail.fromJson(Map<String, dynamic> json) =>
+      _$ModelDetailFromJson(json);
+}

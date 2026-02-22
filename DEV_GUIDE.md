@@ -270,16 +270,25 @@ final String regionId;
 
 - ✅ 后端骨架：FastAPI + PostgreSQL + JWT 认证 + 6 组 API 路由
 - ✅ 数据库 ORM 模型：8 张表 (students, questions, knowledge_points, models, student_mastery, upload_batches, confusion_groups, regional_templates)
-- ✅ Flutter 前端框架：go_router 路由 + 15+ 页面骨架
+- ✅ Flutter 前端框架：go_router 路由 + 20+ 页面骨架 (90+ dart 文件)
 - ✅ Flutter 网络层：Dio 单例 + Riverpod providers + Token 拦截器
 - ✅ 前后端数据模型对齐：Student, KnowledgePoint, ModelItem, Question, Dashboard, Recommendation
+- ✅ 后端 `services/` 业务逻辑层：5 个 service 文件，路由层 mock 数据已替换为真实 DB 查询
+- ✅ Flutter 登录/注册页面 + 路由守卫 + 上传页面改造
+- ✅ seed.py 种子数据（覆盖 6/8 表，merge 幂等设计）
+- ✅ 15 个冒烟测试覆盖全部 API 端点
+- ✅ docker-compose.yml 修复（env_file 读取 SECRET_KEY）
+
+### 进行中
+
+- 🔄 mastery_value 0-100 连续掌握度计算 (T007)
+- 🔄 Flutter 首页/知识树/模型树接入真实 API (T006)
+- 🔄 Alembic 迁移验证 + Student 字段默认值修复 (T008)
 
 ### 待开发
 
-- ⬜ 后端 `services/` 业务逻辑层（目前路由返回 mock 数据）
 - ⬜ 图片上传 + OCR/AI 诊断流程
 - ⬜ Atom/Episode 交互模型（参见 `docs/2_22新文档/architecture.md`）
-- ⬜ mastery_value 连续 0-100 掌握度计算
 - ⬜ E/R/S 错误编码体系（参见 `docs/2_22新文档/v1.1part.md`）
 - ⬜ 闪卡复习 SM-2 算法
 - ⬜ 成绩预测模型

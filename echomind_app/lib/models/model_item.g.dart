@@ -27,3 +27,21 @@ ModelChapterNode _$ModelChapterNodeFromJson(Map<String, dynamic> json) =>
           .map((e) => ModelSectionNode.fromJson(e as Map<String, dynamic>))
           .toList(),
     );
+
+ModelDetail _$ModelDetailFromJson(Map<String, dynamic> json) => ModelDetail(
+      id: json['id'] as String,
+      name: json['name'] as String,
+      description: json['description'] as String?,
+      chapter: json['chapter'] as String,
+      section: json['section'] as String,
+      prerequisiteKpIds: (json['prerequisite_kp_ids'] as List<dynamic>?)
+          ?.map((e) => e as String)
+          .toList(),
+      confusionGroupIds: (json['confusion_group_ids'] as List<dynamic>?)
+          ?.map((e) => e as String)
+          .toList(),
+      masteryLevel: (json['mastery_level'] as num?)?.toInt(),
+      masteryValue: (json['mastery_value'] as num?)?.toDouble(),
+      errorCount: (json['error_count'] as num?)?.toInt() ?? 0,
+      correctCount: (json['correct_count'] as num?)?.toInt() ?? 0,
+    );

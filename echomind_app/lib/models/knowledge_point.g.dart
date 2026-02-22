@@ -27,3 +27,21 @@ ChapterNode _$ChapterNodeFromJson(Map<String, dynamic> json) => ChapterNode(
           .map((e) => SectionNode.fromJson(e as Map<String, dynamic>))
           .toList(),
     );
+
+KnowledgePointDetail _$KnowledgePointDetailFromJson(
+        Map<String, dynamic> json) =>
+    KnowledgePointDetail(
+      id: json['id'] as String,
+      name: json['name'] as String,
+      conclusionLevel: (json['conclusion_level'] as num).toInt(),
+      description: json['description'] as String?,
+      chapter: json['chapter'] as String,
+      section: json['section'] as String,
+      relatedModelIds: (json['related_model_ids'] as List<dynamic>?)
+          ?.map((e) => e as String)
+          .toList(),
+      masteryLevel: (json['mastery_level'] as num?)?.toInt(),
+      masteryValue: (json['mastery_value'] as num?)?.toDouble(),
+      errorCount: (json['error_count'] as num?)?.toInt() ?? 0,
+      correctCount: (json['correct_count'] as num?)?.toInt() ?? 0,
+    );
