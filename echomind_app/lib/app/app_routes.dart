@@ -22,4 +22,6 @@ class AppRoutes {
   static const String uploadMenu = '/upload-menu';
   static const String weeklyReview = '/weekly-review';
   static const String registerStrategy = '/register-strategy';
+  static const String login = '/login';
+  static const String register = '/register';
 }

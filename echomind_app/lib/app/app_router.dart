@@ -1,5 +1,9 @@
+import 'package:flutter/widgets.dart';
 import 'package:go_router/go_router.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:echomind_app/app/app_routes.dart';
+import 'package:echomind_app/features/auth/login_page.dart';
+import 'package:echomind_app/features/auth/register_page.dart';
 import 'package:echomind_app/features/home/home_page.dart';
 import 'package:echomind_app/features/community/community_page.dart';
 import 'package:echomind_app/features/memory/memory_page.dart';
@@ -21,9 +25,22 @@ import 'package:echomind_app/features/upload_menu/upload_menu_page.dart';
 import 'package:echomind_app/features/weekly_review/weekly_review_page.dart';
 import 'package:echomind_app/features/register_strategy/register_strategy_page.dart';
 
+const _authRoutes = {AppRoutes.login, AppRoutes.register};
+
 final appRouter = GoRouter(
   initialLocation: AppRoutes.home,
+  redirect: (BuildContext context, GoRouterState state) async {
+    final prefs = await SharedPreferences.getInstance();
+    final hasToken = prefs.getString('auth_token') != null;
+    final isAuthRoute = _authRoutes.contains(state.matchedLocation);
+    if (!hasToken && !isAuthRoute) return AppRoutes.login;
+    if (hasToken && isAuthRoute) return AppRoutes.home;
+    return null;
+  },
   routes: [
+    // Auth pages
+    GoRoute(path: AppRoutes.login, builder: (_, __) => const LoginPage()),
+    GoRoute(path: AppRoutes.register, builder: (_, __) => const RegisterPage()),
     // 5 tab pages
     GoRoute(path: AppRoutes.home, builder: (_, __) => const HomePage()),
     GoRoute(path: AppRoutes.globalKnowledge, builder: (_, __) => const GlobalKnowledgePage()),
