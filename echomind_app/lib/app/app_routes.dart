@@ -24,4 +24,8 @@ class AppRoutes {
   static const String registerStrategy = '/register-strategy';
   static const String login = '/login';
   static const String register = '/register';
+
+  // 路径生成辅助方法
+  static String knowledgeDetailPath(String id) => '/knowledge-detail/$id';
+  static String modelDetailPath(String id) => '/model-detail/$id';
 }

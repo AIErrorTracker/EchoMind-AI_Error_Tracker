@@ -18,9 +18,9 @@ class QuestionRelationsWidget extends StatelessWidget {
           children: [
             const Text('关联信息', style: TextStyle(fontSize: 14, fontWeight: FontWeight.w600)),
             const SizedBox(height: 10),
-            _link(context, '归属模型', '电场力分析模型', () => context.push(AppRoutes.modelDetail)),
+            _link(context, '归属模型', '电场力分析模型', () => context.push(AppRoutes.modelDetailPath('mock'))),
             const SizedBox(height: 6),
-            _link(context, '关联知识点', '库仑定律 · 电场强度', () => context.push(AppRoutes.knowledgeDetail)),
+            _link(context, '关联知识点', '库仑定律 · 电场强度', () => context.push(AppRoutes.knowledgeDetailPath('mock'))),
           ],
         ),
       ),

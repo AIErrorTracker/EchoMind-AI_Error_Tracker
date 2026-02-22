@@ -68,7 +68,7 @@ class _KnowledgeTreeWidgetState extends ConsumerState<KnowledgeTreeWidget> {
           () => setState(() => open ? _expandedSections.remove(key) : _expandedSections.add(key))),
       if (open)
         for (final item in sec.items)
-          _leafItem(item.name, item.conclusionLevel),
+          _leafItem(item.id, item.name, item.conclusionLevel),
     ]);
   }
 
@@ -112,7 +112,7 @@ class _KnowledgeTreeWidgetState extends ConsumerState<KnowledgeTreeWidget> {
       _sectionHeader(sec.title, sec.count, open,
           () => setState(() => open ? _expandedSections.remove(key) : _expandedSections.add(key))),
       if (open)
-        for (final item in sec.items) _leafItem(item.title, item.level),
+        for (final item in sec.items) _leafItem('mock', item.title, item.level),
     ]);
   }
 
@@ -147,9 +147,9 @@ class _KnowledgeTreeWidgetState extends ConsumerState<KnowledgeTreeWidget> {
     );
   }
 
-  Widget _leafItem(String title, int level) {
+  Widget _leafItem(String id, String title, int level) {
     return GestureDetector(
-      onTap: () => context.push(AppRoutes.knowledgeDetail),
+      onTap: () => context.push(AppRoutes.knowledgeDetailPath(id)),
       behavior: HitTestBehavior.opaque,
       child: Padding(
         padding: const EdgeInsets.fromLTRB(46, 8, 14, 8),

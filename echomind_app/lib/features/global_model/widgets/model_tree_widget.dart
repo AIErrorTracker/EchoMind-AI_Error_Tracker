@@ -50,7 +50,7 @@ class _ModelTreeWidgetState extends ConsumerState<ModelTreeWidget> {
                   padding: const EdgeInsets.fromLTRB(28, 8, 14, 4),
                   child: Text(sec.section, style: const TextStyle(fontSize: 13, color: AppTheme.textSecondary, fontWeight: FontWeight.w500)),
                 ),
-              for (final item in sec.items) _leafItem(item.name),
+              for (final item in sec.items) _leafItem(item.id, item.name),
             ]]
           : [],
     );
@@ -76,7 +76,7 @@ class _ModelTreeWidgetState extends ConsumerState<ModelTreeWidget> {
       count: '${ch.items.length}项',
       open: open,
       onTap: () => setState(() => open ? _expanded.remove(ci) : _expanded.add(ci)),
-      children: open ? [for (final name in ch.items) _leafItem(name)] : [],
+      children: open ? [for (final name in ch.items) _leafItem('mock', name)] : [],
     );
   }
 
@@ -106,9 +106,9 @@ class _ModelTreeWidgetState extends ConsumerState<ModelTreeWidget> {
     );
   }
 
-  Widget _leafItem(String title) {
+  Widget _leafItem(String id, String title) {
     return GestureDetector(
-      onTap: () => context.push(AppRoutes.modelDetail),
+      onTap: () => context.push(AppRoutes.modelDetailPath(id)),
       behavior: HitTestBehavior.opaque,
       child: Padding(
         padding: const EdgeInsets.fromLTRB(40, 8, 14, 8),

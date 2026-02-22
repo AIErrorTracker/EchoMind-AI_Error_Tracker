@@ -7,7 +7,8 @@ import 'package:echomind_app/features/model_detail/widgets/related_question_list
 import 'package:echomind_app/features/model_detail/widgets/training_record_list_widget.dart';
 
 class ModelDetailPage extends StatelessWidget {
-  const ModelDetailPage({super.key});
+  final String modelId;
+  const ModelDetailPage({super.key, required this.modelId});
 
   @override
   Widget build(BuildContext context) {
@@ -21,9 +22,9 @@ class ModelDetailPage extends StatelessWidget {
               child: ListView(
                 padding: EdgeInsets.only(bottom: 24),
                 children: [
-                  MasteryDashboardWidget(),
+                  MasteryDashboardWidget(modelId: modelId),
                   SizedBox(height: 20),
-                  PrerequisiteKnowledgeListWidget(),
+                  PrerequisiteKnowledgeListWidget(modelId: modelId),
                   SizedBox(height: 20),
                   RelatedQuestionListWidget(),
                   SizedBox(height: 20),

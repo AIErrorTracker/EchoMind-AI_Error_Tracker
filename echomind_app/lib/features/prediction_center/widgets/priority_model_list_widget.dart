@@ -24,7 +24,7 @@ class PriorityModelListWidget extends StatelessWidget {
           ...List.generate(_items.length, (i) {
             final (name, level, desc) = _items[i];
             return GestureDetector(
-              onTap: () => context.push(AppRoutes.modelDetail),
+              onTap: () => context.push(AppRoutes.modelDetailPath('mock')),
               child: Container(
                 margin: EdgeInsets.only(bottom: i < _items.length - 1 ? 8 : 0),
                 padding: const EdgeInsets.all(12),
