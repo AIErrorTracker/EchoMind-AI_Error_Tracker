@@ -31,13 +31,11 @@ prediction-center
 ## 页面截图
 
 - 视口 `390x844`
-![prediction-center-390x844](../../第一阶段_html细化/html截图验证/prediction-center/full/prediction-center__390x844__full.png)
-
+  ![prediction-center-390x844](../../第一阶段_html细化/html截图验证/prediction-center/full/prediction-center__390x844__full.png)
 - 视口 `430x932`
-![prediction-center-430x932](../../第一阶段_html细化/html截图验证/prediction-center/full/prediction-center__430x932__full.png)
-
+  ![prediction-center-430x932](../../第一阶段_html细化/html截图验证/prediction-center/full/prediction-center__430x932__full.png)
 - 视口 `834x1194`
-![prediction-center-834x1194](../../第一阶段_html细化/html截图验证/prediction-center/full/prediction-center__834x1194__full.png)
+  ![prediction-center-834x1194](../../第一阶段_html细化/html截图验证/prediction-center/full/prediction-center__834x1194__full.png)
 
 ---
 
@@ -73,8 +71,6 @@ prediction-center
 - 功能说明: 题号维度提分路径表。
 - 布局契约: 功能块位于页面主内容区，跟随文档流渲染。
 - 输入/输出: 输入: `pageData.score-path-table`。输出: 可触发路由跳转: questionAggregate。
-
-### priority-model-list
 
 ![prediction-center-priority-model-list](../../第一阶段_html细化/html截图验证/prediction-center/components/priority-model-list__390x844.png)
 
