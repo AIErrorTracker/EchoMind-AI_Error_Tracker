@@ -1,16 +1,16 @@
 """Weekly review schemas."""
-from pydantic import BaseModel
+from pydantic import BaseModel, Field
 
 
 class WeeklyProgress(BaseModel):
-    total_questions: int
-    correct_count: int
-    error_count: int
-    new_mastered: int
+    total_questions: int = Field(description="本周做题总数")
+    correct_count: int = Field(description="本周正确题数")
+    error_count: int = Field(description="本周错题数")
+    new_mastered: int = Field(description="本周新掌握的知识点/模型数量")
 
 
 class WeeklyReviewResponse(BaseModel):
-    score_change: float
-    weekly_progress: WeeklyProgress
-    dashboard_stats: dict
-    next_week_focus: list[str]
+    score_change: float = Field(description="周间正确率变化值，正数表示提升，负数表示下降")
+    weekly_progress: WeeklyProgress = Field(description="本周做题统计")
+    dashboard_stats: dict = Field(description="仪表盘快照数据")
+    next_week_focus: list[str] = Field(description="下周重点关注的知识点/模型 ID 列表")
