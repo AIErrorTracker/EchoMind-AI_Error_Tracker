@@ -9,7 +9,7 @@ from app.core.security import hash_password, verify_password, create_access_toke
 from app.models.student import Student
 from app.schemas.auth import RegisterRequest, LoginRequest, AuthResponse, UserResponse
 
-router = APIRouter(prefix="/auth", tags=["auth"])
+router = APIRouter(prefix="/auth", tags=["认证"])
 
 
 def _to_user_response(u: Student) -> UserResponse:

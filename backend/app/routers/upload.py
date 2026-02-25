@@ -6,7 +6,7 @@ from fastapi import APIRouter, Depends, HTTPException, UploadFile
 
 from app.core.deps import get_current_user
 
-router = APIRouter(prefix="/upload", tags=["upload"])
+router = APIRouter(prefix="/upload", tags=["图片上传"])
 
 UPLOAD_DIR = Path(__file__).resolve().parents[2] / "uploads"
 ALLOWED_TYPES = {"image/jpeg", "image/png"}

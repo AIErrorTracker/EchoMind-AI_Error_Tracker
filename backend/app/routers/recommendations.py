@@ -8,7 +8,7 @@ from app.models.student import Student
 from app.schemas.recommendation import RecommendationItem
 from app.services import recommendation_service
 
-router = APIRouter(prefix="/recommendations", tags=["recommendations"])
+router = APIRouter(prefix="/recommendations", tags=["推荐"])
 
 
 @router.get("", response_model=list[RecommendationItem])

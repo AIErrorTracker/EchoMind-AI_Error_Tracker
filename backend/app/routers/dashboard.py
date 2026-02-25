@@ -8,7 +8,7 @@ from app.models.student import Student
 from app.schemas.dashboard import DashboardResponse
 from app.services import dashboard_service
 
-router = APIRouter(prefix="/dashboard", tags=["dashboard"])
+router = APIRouter(prefix="/dashboard", tags=["仪表盘"])
 
 
 @router.get("", response_model=DashboardResponse)

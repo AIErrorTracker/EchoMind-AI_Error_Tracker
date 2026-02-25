@@ -8,7 +8,7 @@ from app.models.student import Student
 from app.schemas.knowledge import ChapterNode, KnowledgePointDetail
 from app.services import knowledge_service
 
-router = APIRouter(prefix="/knowledge", tags=["knowledge"])
+router = APIRouter(prefix="/knowledge", tags=["知识点"])
 
 
 @router.get("/tree", response_model=list[ChapterNode])

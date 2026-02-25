@@ -8,7 +8,7 @@ from app.models.student import Student
 from app.schemas.weekly_review import WeeklyReviewResponse
 from app.services import weekly_review_service
 
-router = APIRouter(prefix="/weekly-review", tags=["weekly-review"])
+router = APIRouter(prefix="/weekly-review", tags=["周报"])
 
 
 @router.get("", response_model=WeeklyReviewResponse)

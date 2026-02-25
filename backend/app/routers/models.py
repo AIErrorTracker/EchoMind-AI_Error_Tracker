@@ -8,7 +8,7 @@ from app.models.student import Student
 from app.schemas.model import ModelChapterNode, ModelDetail
 from app.services import model_service
 
-router = APIRouter(prefix="/models", tags=["models"])
+router = APIRouter(prefix="/models", tags=["解题模型"])
 
 
 @router.get("/tree", response_model=list[ModelChapterNode])

@@ -8,7 +8,7 @@ from app.models.student import Student
 from app.schemas.exam import ExamItem, HeatmapPoint
 from app.services import exam_service
 
-router = APIRouter(prefix="/exams", tags=["exams"])
+router = APIRouter(prefix="/exams", tags=["考试"])
 
 
 @router.get("/recent", response_model=list[ExamItem])

@@ -1,4 +1,6 @@
 """Questions router — upload + history + detail."""
+import uuid
+
 from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.ext.asyncio import AsyncSession
 
@@ -8,7 +10,7 @@ from app.models.student import Student
 from app.schemas.question import QuestionUploadRequest, QuestionResponse, QuestionDetailResponse, HistoryDateGroup, AggregateItem
 from app.services import question_service
 
-router = APIRouter(prefix="/questions", tags=["questions"])
+router = APIRouter(prefix="/questions", tags=["题目管理"])
 
 
 @router.post("/upload", response_model=QuestionResponse, status_code=201)
@@ -40,6 +42,11 @@ async def question_detail(
     db: AsyncSession = Depends(get_db),
     user: Student = Depends(get_current_user),
 ):
+    # Validate UUID format to avoid DB cast error
+    try:
+        uuid.UUID(question_id)
+    except ValueError:
+        raise HTTPException(404, "Question not found")
     result = await question_service.get_question_detail(db, question_id, user.id)
     if not result:
         raise HTTPException(404, "Question not found")

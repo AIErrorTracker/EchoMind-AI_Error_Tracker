@@ -8,7 +8,7 @@ from app.models.student import Student
 from app.schemas.prediction import PredictionResponse
 from app.services import prediction_service
 
-router = APIRouter(prefix="/prediction", tags=["prediction"])
+router = APIRouter(prefix="/prediction", tags=["成绩预测"])
 
 
 @router.get("/score", response_model=PredictionResponse)

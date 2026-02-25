@@ -8,7 +8,7 @@ from app.models.student import Student
 from app.schemas.flashcard import FlashcardItem, FlashcardReviewRequest
 from app.services import flashcard_service
 
-router = APIRouter(prefix="/flashcards", tags=["flashcards"])
+router = APIRouter(prefix="/flashcards", tags=["闪卡复习"])
 
 
 @router.get("", response_model=list[FlashcardItem])
