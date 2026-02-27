@@ -344,6 +344,19 @@ async def chat(
         if mastery:
             mastery.mastery_value = new_value
             mastery.current_level = int(new_level[1])  # "L3" → 3
+        else:
+            # 首次学习该知识点，创建掌握度记录
+            new_mastery = StudentMastery(
+                student_id=student_id,
+                target_type="kp",
+                target_id=session.knowledge_point_id,
+                mastery_value=new_value,
+                current_level=int(new_level[1]),
+                peak_level=int(new_level[1]),
+            )
+            db.add(new_mastery)
+            logger.info("创建新掌握度记录: student=%s kp=%s value=%.1f",
+                         student_id, session.knowledge_point_id, new_value)
         session.mastery_after = new_value
         session.level_after = new_level
 

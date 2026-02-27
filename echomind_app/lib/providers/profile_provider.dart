@@ -24,7 +24,15 @@ class ProfileState {
 
 class ProfileNotifier extends StateNotifier<ProfileState> {
   ProfileNotifier() : super(const ProfileState(loading: true)) {
-    loadProfile();
+    _init();
+  }
+
+  Future<void> _init() async {
+    try {
+      await loadProfile();
+    } catch (_) {
+      // loadProfile 内部已处理错误，这里防止未捕获异常
+    }
   }
 
   final _api = ApiClient().dio;

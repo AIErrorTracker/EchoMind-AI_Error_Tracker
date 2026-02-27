@@ -48,7 +48,12 @@ app = FastAPI(
 
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],
+    allow_origins=[
+        "http://localhost:3000",       # 本地前端开发
+        "http://localhost:8080",       # Flutter Web 开发
+        "http://8.130.16.212:8001",    # 生产 API 自身
+        "http://8.130.16.212",         # 生产前端
+    ],
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],

@@ -1,7 +1,7 @@
 """Knowledge learning session router — 6 endpoints."""
 import uuid
 
-from fastapi import APIRouter, Depends, status
+from fastapi import APIRouter, Depends, HTTPException, status
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.core.database import get_db
@@ -40,8 +40,12 @@ async def chat(
     db: AsyncSession = Depends(get_db),
 ):
     """发送消息并获取 AI 回复。"""
+    try:
+        sid = uuid.UUID(req.session_id)
+    except ValueError:
+        raise HTTPException(status_code=400, detail="无效的会话 ID 格式")
     return await learning_service.chat(
-        session_id=uuid.UUID(req.session_id),
+        session_id=sid,
         content=req.content,
         student_id=user.id,
         db=db,
@@ -55,8 +59,12 @@ async def get_session_by_id(
     db: AsyncSession = Depends(get_db),
 ):
     """获取指定会话详情（含消息历史）。"""
+    try:
+        sid = uuid.UUID(session_id)
+    except ValueError:
+        raise HTTPException(status_code=400, detail="无效的会话 ID 格式")
     return await learning_service.get_session(
-        session_id=uuid.UUID(session_id),
+        session_id=sid,
         student_id=user.id,
         db=db,
     )
@@ -81,8 +89,12 @@ async def complete_session(
     db: AsyncSession = Depends(get_db),
 ):
     """手动结束学习会话。"""
+    try:
+        sid = uuid.UUID(req.session_id)
+    except ValueError:
+        raise HTTPException(status_code=400, detail="无效的会话 ID 格式")
     return await learning_service.complete_session(
-        session_id=uuid.UUID(req.session_id),
+        session_id=sid,
         student_id=user.id,
         db=db,
     )

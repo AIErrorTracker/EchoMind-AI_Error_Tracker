@@ -1,5 +1,7 @@
 """Model training session router — 6 endpoints."""
-from fastapi import APIRouter, Depends, status
+import uuid as _uuid
+
+from fastapi import APIRouter, Depends, HTTPException, status
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.core.database import get_db
@@ -70,6 +72,10 @@ async def get_session_by_id(
     db: AsyncSession = Depends(get_db),
 ):
     """获取指定训练会话详情（含消息历史 + 步骤结果）。"""
+    try:
+        _uuid.UUID(session_id)
+    except ValueError:
+        raise HTTPException(status_code=400, detail="无效的会话 ID 格式")
     return await training_service.get_session(
         session_id=session_id,
         student_id=user.id,

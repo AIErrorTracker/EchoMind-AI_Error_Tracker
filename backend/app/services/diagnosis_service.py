@@ -323,6 +323,9 @@ async def chat(
             question.diagnosis_status = "diagnosed"
             question.diagnosis_result = diagnosis_result
             await db.commit()
+        else:
+            logger.warning("诊断完成但题目不存在: question_id=%s session_id=%s",
+                           session.question_id, session_id)
 
     response: dict = {
         "message": {

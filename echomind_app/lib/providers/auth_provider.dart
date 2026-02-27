@@ -30,11 +30,16 @@ class AuthNotifier extends StateNotifier<AuthState> {
         'phone': phone,
         'password': password,
       });
-      final token = res.data['access_token'] as String;
+      final data = res.data as Map<String, dynamic>?;
+      final token = data?['access_token'] as String?;
+      if (token == null || token.isEmpty) {
+        state = state.copyWith(isLoading: false, error: '登录响应异常');
+        return false;
+      }
       final prefs = await SharedPreferences.getInstance();
       await prefs.setString('auth_token', token);
 
-      final user = Student.fromJson(res.data['user']);
+      final user = Student.fromJson(data!['user'] as Map<String, dynamic>);
       state = AuthState(user: user);
       return true;
     } catch (e) {
@@ -61,11 +66,16 @@ class AuthNotifier extends StateNotifier<AuthState> {
         'target_score': targetScore,
         if (nickname != null) 'nickname': nickname,
       });
-      final token = res.data['access_token'] as String;
+      final data = res.data as Map<String, dynamic>?;
+      final token = data?['access_token'] as String?;
+      if (token == null || token.isEmpty) {
+        state = state.copyWith(isLoading: false, error: '注册响应异常');
+        return false;
+      }
       final prefs = await SharedPreferences.getInstance();
       await prefs.setString('auth_token', token);
 
-      final user = Student.fromJson(res.data['user']);
+      final user = Student.fromJson(data!['user'] as Map<String, dynamic>);
       state = AuthState(user: user);
       return true;
     } catch (e) {

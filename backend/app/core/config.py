@@ -1,9 +1,21 @@
+import os
+import secrets
+
 from pydantic_settings import BaseSettings
 
 
+def _default_secret_key() -> str:
+    """优先从环境变量读取，否则生成随机密钥（开发环境自动生成，生产环境必须显式设置）。"""
+    env_key = os.environ.get("SECRET_KEY", "")
+    if env_key:
+        return env_key
+    # 开发环境：自动生成随机密钥，每次重启不同
+    return secrets.token_urlsafe(32)
+
+
 class Settings(BaseSettings):
-    database_url: str = "postgresql+asyncpg://postgres:postgres@localhost:5432/echomind"
-    secret_key: str = "change-me-in-production"
+    database_url: str = "postgresql+asyncpg://postgres:postgres@db:5432/echomind"
+    secret_key: str = _default_secret_key()
     access_token_expire_minutes: int = 1440
     algorithm: str = "HS256"
 

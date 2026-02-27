@@ -158,7 +158,7 @@ class TrainingState {
   bool get isActive => status == 'active';
   bool get isCompleted => status == 'completed';
   bool get hasSession => sessionId != null;
-  bool get canSend => isActive && !isSending;
+  bool get canSend => isActive && !isSending && sessionId != null;
   bool get canAdvance => stepStatus == 'completed' && isActive;
 
   TrainingState copyWith({

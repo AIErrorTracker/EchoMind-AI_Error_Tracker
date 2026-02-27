@@ -579,6 +579,19 @@ async def _finalize_session(
         if update["new_level"] > mastery_record.peak_level:
             mastery_record.peak_level = update["new_level"]
         mastery_record.updated_at = now
+    else:
+        # 首次训练该模型，创建掌握度记录
+        new_mastery = StudentMastery(
+            student_id=session.student_id,
+            target_type="model",
+            target_id=str(session.model_id),
+            mastery_value=update["mastery_value"],
+            current_level=update["new_level"],
+            peak_level=update["new_level"],
+        )
+        db.add(new_mastery)
+        logger.info("创建新掌握度记录: student=%s model=%s value=%.1f",
+                     session.student_id, session.model_id, update["mastery_value"])
 
     # 4. 关闭会话
     training_result = {
