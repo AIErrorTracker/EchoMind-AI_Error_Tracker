@@ -1,5 +1,7 @@
 # 数据库Schema设计（PostgreSQL）
 
+> 最后更新: 2026-02-28 — 覆盖全部 17 张表
+>
 > 基于 core_framework_v2.0.md 审计补充数据模型 + Section 二十九标签字段
 
 ---
@@ -182,6 +184,222 @@ CREATE TABLE confusion_groups (
     model_ids        TEXT[] NOT NULL,          -- 组内模型ID
     comparison_table JSONB,                    -- {headers:[], rows:[[]]}
     created_at       TIMESTAMPTZ DEFAULT now()
+);
+```
+
+---
+
+## 表9：diagnosis_sessions（AI诊断会话）
+
+> M4 新增。每次 AI 诊断对话创建一个会话，最多 5 轮。
+
+```sql
+CREATE TABLE diagnosis_sessions (
+    id              UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+    student_id      UUID NOT NULL REFERENCES students(id),
+    question_id     UUID NOT NULL REFERENCES questions(id),
+    status          VARCHAR(20) NOT NULL DEFAULT 'active',   -- active/completed
+    current_round   SMALLINT NOT NULL DEFAULT 0,
+    max_rounds      SMALLINT NOT NULL DEFAULT 5,
+    system_prompt   TEXT,                                     -- LLM system prompt 快照
+    diagnosis_result JSONB,                                   -- 诊断结论 JSON
+
+    created_at      TIMESTAMPTZ DEFAULT now(),
+    updated_at      TIMESTAMPTZ DEFAULT now()
+);
+
+CREATE INDEX idx_diag_session_student ON diagnosis_sessions(student_id);
+CREATE INDEX idx_diag_session_question ON diagnosis_sessions(question_id);
+CREATE UNIQUE INDEX idx_diag_session_active
+    ON diagnosis_sessions(student_id, question_id) WHERE status = 'active';
+```
+
+---
+
+## 表10：diagnosis_messages（诊断消息）
+
+```sql
+CREATE TABLE diagnosis_messages (
+    id          UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+    session_id  UUID NOT NULL REFERENCES diagnosis_sessions(id) ON DELETE CASCADE,
+    role        VARCHAR(10) NOT NULL,    -- 'user' / 'assistant'
+    content     TEXT NOT NULL,
+    round       SMALLINT NOT NULL,       -- 第几轮对话
+    token_count INT,
+
+    created_at  TIMESTAMPTZ DEFAULT now()
+);
+
+CREATE INDEX idx_diag_msg_session ON diagnosis_messages(session_id, created_at);
+```
+
+---
+
+## 表11：learning_sessions（知识学习会话）
+
+> M5 新增。五步 AI 引导学习流程。
+
+```sql
+CREATE TABLE learning_sessions (
+    id                  UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+    student_id          UUID NOT NULL REFERENCES students(id),
+    knowledge_point_id  VARCHAR(50) NOT NULL,
+    status              VARCHAR(20) NOT NULL DEFAULT 'active',  -- active/completed
+    source              VARCHAR(30) NOT NULL DEFAULT 'self_study',
+    current_step        INT NOT NULL DEFAULT 1,
+    max_steps           INT NOT NULL DEFAULT 5,
+    mastery_before      FLOAT,
+    mastery_after       FLOAT,
+    level_before        VARCHAR(5),
+    level_after         VARCHAR(5),
+    system_prompt       TEXT,
+
+    created_at          TIMESTAMPTZ DEFAULT now(),
+    updated_at          TIMESTAMPTZ DEFAULT now()
+);
+
+CREATE INDEX idx_ls_student ON learning_sessions(student_id);
+CREATE INDEX idx_ls_status ON learning_sessions(student_id, status);
+```
+
+---
+
+## 表12：learning_messages（学习消息）
+
+```sql
+CREATE TABLE learning_messages (
+    id          UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+    session_id  UUID NOT NULL REFERENCES learning_sessions(id) ON DELETE CASCADE,
+    role        VARCHAR(10) NOT NULL,
+    content     TEXT NOT NULL,
+    step        INT NOT NULL,
+    token_count INT,
+
+    created_at  TIMESTAMPTZ DEFAULT now()
+);
+
+CREATE INDEX idx_learn_msg_session ON learning_messages(session_id, created_at);
+```
+
+---
+
+## 表13：training_sessions（模型训练会话）
+
+> M5 新增。解题模型分步训练。
+
+```sql
+CREATE TABLE training_sessions (
+    id                UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+    student_id        UUID NOT NULL REFERENCES students(id),
+    model_id          VARCHAR(50) NOT NULL,
+    model_name        VARCHAR(100),
+    status            VARCHAR(20) NOT NULL DEFAULT 'active',
+    current_step      INT NOT NULL DEFAULT 1,
+    entry_step        INT NOT NULL DEFAULT 1,
+    source            VARCHAR(30) NOT NULL DEFAULT 'self_study',
+    question_id       UUID REFERENCES questions(id),
+    diagnosis_result  JSONB,
+    system_prompt     TEXT,
+    mastery_snapshot  JSONB,
+    training_result   JSONB,
+
+    created_at        TIMESTAMPTZ DEFAULT now(),
+    updated_at        TIMESTAMPTZ DEFAULT now()
+);
+
+CREATE INDEX idx_train_session_student ON training_sessions(student_id);
+CREATE INDEX idx_train_session_model ON training_sessions(model_id);
+CREATE UNIQUE INDEX idx_train_session_active
+    ON training_sessions(student_id, model_id) WHERE status = 'active';
+```
+
+---
+
+## 表14：training_messages（训练消息）
+
+```sql
+CREATE TABLE training_messages (
+    id          UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+    session_id  UUID NOT NULL REFERENCES training_sessions(id) ON DELETE CASCADE,
+    role        VARCHAR(10) NOT NULL,
+    content     TEXT NOT NULL,
+    step        SMALLINT NOT NULL,
+    token_count INT,
+
+    created_at  TIMESTAMPTZ DEFAULT now()
+);
+
+CREATE INDEX idx_train_msg_session ON training_messages(session_id, created_at);
+```
+
+---
+
+## 表15：training_step_results（训练步骤结果）
+
+```sql
+CREATE TABLE training_step_results (
+    id          UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+    session_id  UUID NOT NULL REFERENCES training_sessions(id) ON DELETE CASCADE,
+    step        SMALLINT NOT NULL,
+    passed      BOOLEAN NOT NULL,
+    ai_summary  TEXT,
+    details     JSONB,
+
+    created_at  TIMESTAMPTZ DEFAULT now(),
+
+    UNIQUE(session_id, step)
+);
+
+CREATE INDEX idx_train_step_session ON training_step_results(session_id);
+```
+
+---
+
+## 表16：feature_requests（社区需求）
+
+> M6 新增。社区需求投票功能。
+
+```sql
+CREATE TABLE feature_requests (
+    id          UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+    title       VARCHAR(200) NOT NULL,
+    description TEXT NOT NULL,
+    vote_count  INT DEFAULT 0,
+    tag         VARCHAR(50),
+    student_id  UUID NOT NULL REFERENCES students(id),
+
+    created_at  TIMESTAMPTZ DEFAULT now()
+);
+```
+
+---
+
+## 表17：votes（投票记录）
+
+```sql
+CREATE TABLE votes (
+    id          UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+    student_id  UUID NOT NULL REFERENCES students(id),
+    request_id  UUID NOT NULL REFERENCES feature_requests(id) ON DELETE CASCADE,
+
+    created_at  TIMESTAMPTZ DEFAULT now(),
+
+    UNIQUE(student_id, request_id)
+);
+```
+
+---
+
+## 表18：feedbacks（用户反馈）
+
+```sql
+CREATE TABLE feedbacks (
+    id             UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+    content        TEXT NOT NULL,
+    feedback_type  VARCHAR(30) NOT NULL,   -- bug / suggestion / other
+    student_id     UUID NOT NULL REFERENCES students(id),
+
+    created_at     TIMESTAMPTZ DEFAULT now()
 );
 ```
 

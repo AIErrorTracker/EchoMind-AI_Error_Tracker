@@ -49,7 +49,7 @@
 
 **需要额外准备的：**
 - ✅ 一个域名（可选，用 IP 也能跑）
-- ✅ 开放端口：22(SSH)、80(HTTP)、443(HTTPS)、8000(API)
+- ✅ 开放端口：22(SSH)、80(HTTP)、443(HTTPS)、8001(API)
 
 ---
 
@@ -102,7 +102,7 @@ apt install -y git
 ufw allow 22
 ufw allow 80
 ufw allow 443
-ufw allow 8000
+ufw allow 8001
 ufw --force enable
 ```
 
@@ -133,12 +133,24 @@ nano backend/.env
 内容改为：
 
 ```env
+# ── 数据库 ──
 DATABASE_URL=postgresql+asyncpg://postgres:postgres@db:5432/echomind
+
+# ── 安全 ──
 SECRET_KEY=这里换成一个随机长字符串
 ACCESS_TOKEN_EXPIRE_MINUTES=1440
+
+# ── LLM 配置（AI诊断/知识学习/模型训练需要）──
+LLM_PROVIDER=gemini
+LLM_API_KEY=你的Gemini API Key
+LLM_MODEL=gemini-2.0-flash
+LLM_MAX_TOKENS=1024
+LLM_TEMPERATURE=0.7
+LLM_PROXY=
 ```
 
 > 生成随机密钥的方法：`openssl rand -hex 32`
+> 获取 Gemini API Key：https://aistudio.google.com/apikey
 
 ### 3.3 修改数据库密码（推荐）
 
@@ -170,7 +182,7 @@ echomind-api-1    Up
 验证 API 是否正常：
 
 ```bash
-curl http://localhost:8000/docs
+curl http://localhost:8001/docs
 # 应返回 Swagger UI 的 HTML
 ```
 
@@ -239,7 +251,7 @@ server {
     client_max_body_size 20M;
 
     location /api/ {
-        proxy_pass http://127.0.0.1:8000/;
+        proxy_pass http://127.0.0.1:8001/;
         proxy_set_header Host $host;
         proxy_set_header X-Real-IP $remote_addr;
         proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
@@ -247,11 +259,11 @@ server {
     }
 
     location /docs {
-        proxy_pass http://127.0.0.1:8000/docs;
+        proxy_pass http://127.0.0.1:8001/docs;
     }
 
     location /openapi.json {
-        proxy_pass http://127.0.0.1:8000/openapi.json;
+        proxy_pass http://127.0.0.1:8001/openapi.json;
     }
 }
 ```
@@ -429,7 +441,7 @@ docker system prune -f
 部署完成后，逐项验证：
 
 - [ ] `docker compose ps` 两个容器都是 Up
-- [ ] `curl http://localhost:8000/docs` 返回 HTML
+- [ ] `curl http://localhost:8001/docs` 返回 HTML
 - [ ] `curl http://你的IP/api/docs` 通过 Nginx 访问正常
 - [ ] 数据库有种子数据（knowledge_points 表有 10 条）
 - [ ] Flutter APK 能连接到服务器 API

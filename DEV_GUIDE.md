@@ -1,6 +1,6 @@
 # EchoMind AI Error Tracker — 开发指南
 
-> 最后更新: 2026-02-22
+> 最后更新: 2026-02-28
 
 ## 1. 项目概述
 
@@ -27,7 +27,7 @@ EchoMind-AI_Error_Tracker/
 │   │   │   ├── database.py     # AsyncSession 工厂
 │   │   │   ├── deps.py         # get_db, get_current_user 依赖
 │   │   │   └── security.py     # JWT 创建/验证, 密码哈希
-│   │   ├── models/             # SQLAlchemy ORM 模型
+│   │   ├── models/             # SQLAlchemy ORM 模型 (17 张表)
 │   │   │   ├── student.py
 │   │   │   ├── question.py
 │   │   │   ├── knowledge_point.py
@@ -35,22 +35,46 @@ EchoMind-AI_Error_Tracker/
 │   │   │   ├── student_mastery.py
 │   │   │   ├── upload_batch.py
 │   │   │   ├── confusion_group.py
-│   │   │   └── regional_template.py
+│   │   │   ├── regional_template.py
+│   │   │   ├── diagnosis_session.py   # AI诊断会话 (M4)
+│   │   │   ├── diagnosis_message.py   # 诊断消息
+│   │   │   ├── learning_session.py    # 知识学习会话 (M5)
+│   │   │   ├── learning_message.py    # 学习消息
+│   │   │   ├── training_session.py    # 模型训练会话 (M5)
+│   │   │   ├── training_message.py    # 训练消息
+│   │   │   ├── training_step_result.py # 训练步骤结果
+│   │   │   └── community.py           # 社区: feature_requests + votes + feedbacks (M6)
 │   │   ├── schemas/            # Pydantic 请求/响应 schema
-│   │   │   ├── auth.py         # RegisterRequest, LoginRequest, AuthResponse, UserResponse
+│   │   │   ├── auth.py         # RegisterRequest, LoginRequest, AuthResponse, UserResponse, ProfileUpdate
 │   │   │   ├── knowledge.py    # ChapterNode > SectionNode > KnowledgePointItem
 │   │   │   ├── model.py        # ModelChapterNode > ModelSectionNode > ModelItem
-│   │   │   ├── question.py     # QuestionUploadRequest, QuestionResponse, HistoryDateGroup
+│   │   │   ├── question.py     # QuestionUploadRequest, QuestionResponse, HistoryDateGroup, AggregateItem
 │   │   │   ├── dashboard.py    # DashboardResponse
-│   │   │   └── recommendation.py # RecommendationItem
-│   │   ├── routers/            # API 路由
+│   │   │   ├── recommendation.py # RecommendationItem
+│   │   │   ├── diagnosis.py    # DiagnosisStartRequest, DiagnosisChatRequest, DiagnosisCompleteRequest
+│   │   │   ├── learning.py     # LearningStartRequest, LearningChatRequest, LearningCompleteRequest
+│   │   │   ├── training.py     # TrainingStartRequest, TrainingInteractRequest, TrainingNextStepRequest
+│   │   │   ├── strategy.py     # StrategyData, StrategyGenerateRequest, TargetScoreUpdateRequest
+│   │   │   ├── community.py    # FeatureRequestCreate, FeedbackCreate, VoteResponse
+│   │   │   └── flashcard.py    # FlashcardItem, FlashcardReviewRequest
+│   │   ├── routers/            # API 路由 (16 个模块)
 │   │   │   ├── auth.py         # /api/auth/*
 │   │   │   ├── knowledge.py    # /api/knowledge/*
 │   │   │   ├── models.py       # /api/models/*
 │   │   │   ├── questions.py    # /api/questions/*
 │   │   │   ├── dashboard.py    # /api/dashboard
-│   │   │   └── recommendations.py # /api/recommendations
-│   │   └── services/           # 业务逻辑层 (待实现)
+│   │   │   ├── recommendations.py # /api/recommendations
+│   │   │   ├── upload.py       # /api/upload/image
+│   │   │   ├── prediction.py   # /api/prediction/*
+│   │   │   ├── weekly_review.py # /api/weekly-review
+│   │   │   ├── exams.py        # /api/exams/*
+│   │   │   ├── flashcards.py   # /api/flashcards/*
+│   │   │   ├── diagnosis.py    # /api/diagnosis/*
+│   │   │   ├── learning.py     # /api/knowledge/learning/*
+│   │   │   ├── training.py     # /api/models/training/*
+│   │   │   ├── strategy.py     # /api/strategy/*
+│   │   │   └── community.py    # /api/community/*
+│   │   └── services/           # 业务逻辑层
 │   ├── alembic/                # 数据库迁移
 │   ├── alembic.ini
 │   ├── seed.py                 # 种子数据脚本
@@ -151,9 +175,15 @@ uvicorn app.main:app --reload --port 8000
 
 | 变量 | 默认值 | 说明 |
 |------|--------|------|
-| `DATABASE_URL` | `postgresql+asyncpg://postgres:postgres@localhost:5432/echomind` | 数据库连接串 |
-| `SECRET_KEY` | `change-me-in-production` | JWT 签名密钥，**生产环境必须更换** |
+| `DATABASE_URL` | `postgresql+asyncpg://postgres:postgres@db:5432/echomind` | 数据库连接串 |
+| `SECRET_KEY` | *(自动生成)* | JWT 签名密钥，**生产环境必须显式设置** |
 | `ACCESS_TOKEN_EXPIRE_MINUTES` | `1440` | Token 有效期 (分钟) |
+| `LLM_PROVIDER` | `gemini` | LLM 供应商 |
+| `LLM_API_KEY` | *(必填)* | LLM API 密钥 |
+| `LLM_MODEL` | `gemini-2.0-flash` | 模型名称 |
+| `LLM_MAX_TOKENS` | `1024` | 最大输出 token |
+| `LLM_TEMPERATURE` | `0.7` | 温度参数 |
+| `LLM_PROXY` | *(空)* | HTTP 代理地址（可选） |
 
 ### 3.3 前端 (Flutter)
 
@@ -178,9 +208,9 @@ flutter build apk --release
 
 > **注意**: API 地址硬编码在 `lib/core/api_client.dart` 的 `_baseUrl` 常量中，默认为 `http://localhost:8000/api`。真机调试时需改为电脑局域网 IP。
 
-## 4. API 端点一览
+## 4. API 端点一览（45 个端点）
 
-Base URL: `http://localhost:8000/api`
+Base URL: `http://localhost:8001/api`（Docker 映射 8001→8000）
 
 ### 4.1 认证 (`/auth`)
 
@@ -189,34 +219,128 @@ Base URL: `http://localhost:8000/api`
 | POST | `/auth/register` | 注册 (phone, password, region_id, subject, target_score) | 否 |
 | POST | `/auth/login` | 登录 (phone, password) → AuthResponse | 否 |
 | GET | `/auth/me` | 获取当前用户信息 | Bearer Token |
+| PUT | `/auth/profile` | 更新个人资料 (nickname, avatar_url, target_score) | Bearer Token |
 
 ### 4.2 知识点 (`/knowledge`)
 
 | 方法 | 路径 | 说明 | 认证 |
 |------|------|------|------|
-| GET | `/knowledge/tree` | 知识点树 (章→节→知识点) | Bearer Token |
-| GET | `/knowledge/{kp_id}` | 知识点详情 | Bearer Token |
+| GET | `/knowledge/tree` | 知识点树 (章→节→知识点) | 否 |
+| GET | `/knowledge/{kp_id}` | 知识点详情 (含掌握度) | Bearer Token |
 
 ### 4.3 题型模型 (`/models`)
 
 | 方法 | 路径 | 说明 | 认证 |
 |------|------|------|------|
-| GET | `/models/tree` | 模型树 (章→节→模型) | Bearer Token |
-| GET | `/models/{model_id}` | 模型详情 | Bearer Token |
+| GET | `/models/tree` | 模型树 (章→节→模型) | 否 |
+| GET | `/models/{model_id}` | 模型详情 (含掌握度) | Bearer Token |
 
 ### 4.4 题目 (`/questions`)
 
 | 方法 | 路径 | 说明 | 认证 |
 |------|------|------|------|
-| POST | `/questions/upload` | 上传题目 (image_url, source, is_correct) | Bearer Token |
+| POST | `/questions/upload` | 上传题目 | Bearer Token |
 | GET | `/questions/history` | 历史记录 (按日期分组) | Bearer Token |
+| GET | `/questions/aggregate` | 聚合统计 (?group_by=model\|knowledge) | Bearer Token |
+| GET | `/questions/{question_id}` | 题目详情 (含诊断结果) | Bearer Token |
 
 ### 4.5 仪表盘与推荐
 
 | 方法 | 路径 | 说明 | 认证 |
 |------|------|------|------|
-| GET | `/dashboard` | 仪表盘数据 (统计+能力雷达) | Bearer Token |
+| GET | `/dashboard` | 仪表盘数据 (统计+四维能力) | Bearer Token |
 | GET | `/recommendations` | 推荐复习列表 | Bearer Token |
+
+### 4.6 图片上传 (`/upload`)
+
+| 方法 | 路径 | 说明 | 认证 |
+|------|------|------|------|
+| POST | `/upload/image` | 上传题目图片 (multipart/form-data) | Bearer Token |
+
+### 4.7 成绩预测 (`/prediction`)
+
+| 方法 | 路径 | 说明 | 认证 |
+|------|------|------|------|
+| GET | `/prediction/score` | 预测分数 + 趋势 + 提分路径 | Bearer Token |
+
+### 4.8 周报 (`/weekly-review`)
+
+| 方法 | 路径 | 说明 | 认证 |
+|------|------|------|------|
+| GET | `/weekly-review` | 周学习报告 | Bearer Token |
+
+### 4.9 考试 (`/exams`)
+
+| 方法 | 路径 | 说明 | 认证 |
+|------|------|------|------|
+| GET | `/exams/recent` | 近期考试列表 | Bearer Token |
+| GET | `/exams/heatmap` | 做题热力图 | Bearer Token |
+
+### 4.10 闪卡复习 (`/flashcards`)
+
+| 方法 | 路径 | 说明 | 认证 |
+|------|------|------|------|
+| GET | `/flashcards` | 闪卡列表 (含到期状态) | Bearer Token |
+| POST | `/flashcards/{mastery_id}/review` | SM-2 复习评分 (quality 0-5) | Bearer Token |
+
+## 5. 数据库迁移
+
+### 4.11 AI诊断 (`/diagnosis`)
+
+| 方法 | 路径 | 说明 | 认证 |
+|------|------|------|------|
+| POST | `/diagnosis/start` | 创建诊断会话 (绑定错题) | Bearer Token |
+| POST | `/diagnosis/chat` | 发送消息获取 AI 回复 | Bearer Token |
+| GET | `/diagnosis/session` | 获取当前活跃会话 | Bearer Token |
+| GET | `/diagnosis/session/{session_id}` | 获取指定会话详情 | Bearer Token |
+| POST | `/diagnosis/complete` | 手动结束诊断 | Bearer Token |
+
+### 4.12 知识学习 (`/knowledge/learning`)
+
+| 方法 | 路径 | 说明 | 认证 |
+|------|------|------|------|
+| POST | `/knowledge/learning/start` | 创建学习会话 | Bearer Token |
+| POST | `/knowledge/learning/chat` | 发送消息获取 AI 回复 | Bearer Token |
+| GET | `/knowledge/learning/session` | 获取当前活跃会话 | Bearer Token |
+| GET | `/knowledge/learning/session/{session_id}` | 获取指定会话详情 | Bearer Token |
+| POST | `/knowledge/learning/complete` | 手动结束学习 | Bearer Token |
+
+### 4.13 模型训练 (`/models/training`)
+
+| 方法 | 路径 | 说明 | 认证 |
+|------|------|------|------|
+| POST | `/models/training/start` | 创建训练会话 | Bearer Token |
+| POST | `/models/training/interact` | 发送消息获取 AI 回复 | Bearer Token |
+| POST | `/models/training/next-step` | 推进到下一步骤 | Bearer Token |
+| GET | `/models/training/session` | 获取当前活跃会话 | Bearer Token |
+| GET | `/models/training/session/{session_id}` | 获取指定会话详情 | Bearer Token |
+| POST | `/models/training/complete` | 手动完成训练 | Bearer Token |
+
+### 4.14 卷面策略 (`/strategy`)
+
+| 方法 | 路径 | 说明 | 认证 |
+|------|------|------|------|
+| POST | `/strategy/generate` | 生成/重新生成卷面策略 | Bearer Token |
+| GET | `/strategy` | 获取当前策略 | Bearer Token |
+| PUT | `/strategy/target-score` | 修改目标分数并重新生成 | Bearer Token |
+| GET | `/strategy/templates` | 获取可用模板列表 | Bearer Token |
+
+### 4.15 社区 (`/community`)
+
+| 方法 | 路径 | 说明 | 认证 |
+|------|------|------|------|
+| GET | `/community/requests` | 需求列表 (分页) | Bearer Token |
+| POST | `/community/requests` | 提交需求 | Bearer Token |
+| POST | `/community/requests/{id}/vote` | 投票 | Bearer Token |
+| DELETE | `/community/requests/{id}/vote` | 取消投票 | Bearer Token |
+| GET | `/community/feedback` | 反馈列表 (分页) | Bearer Token |
+| POST | `/community/feedback` | 提交反馈 | Bearer Token |
+
+### 4.16 健康检查
+
+| 方法 | 路径 | 说明 | 认证 |
+|------|------|------|------|
+| GET | `/health` | 服务健康状态 | 否 |
 
 ## 5. 数据库迁移
 
@@ -264,36 +388,32 @@ ORM 模型位于 `backend/app/models/`，修改后需生成迁移文件。
 final String regionId;
 ```
 
-## 7. 当前进度 (2026-02-22)
+## 7. 当前进度 (2026-02-28)
 
-### 已完成
+### 已完成 (M1-M6)
 
-- ✅ 后端骨架：FastAPI + PostgreSQL + JWT 认证 + 6 组 API 路由
-- ✅ 数据库 ORM 模型：8 张表 (students, questions, knowledge_points, models, student_mastery, upload_batches, confusion_groups, regional_templates)
-- ✅ Flutter 前端框架：go_router 路由 + 20+ 页面骨架 (90+ dart 文件)
-- ✅ Flutter 网络层：Dio 单例 + Riverpod providers + Token 拦截器
-- ✅ 前后端数据模型对齐：Student, KnowledgePoint, ModelItem, Question, Dashboard, Recommendation
-- ✅ 后端 `services/` 业务逻辑层：5 个 service 文件，路由层 mock 数据已替换为真实 DB 查询
-- ✅ Flutter 登录/注册页面 + 路由守卫 + 上传页面改造
-- ✅ seed.py 种子数据（覆盖 6/8 表，merge 幂等设计）
-- ✅ 15 个冒烟测试覆盖全部 API 端点
-- ✅ docker-compose.yml 修复（env_file 读取 SECRET_KEY）
+- ✅ 后端骨架：FastAPI + PostgreSQL + JWT 认证 + 16 组 API 路由（45 个端点）
+- ✅ 数据库 ORM 模型：17 张表 + Alembic 自动迁移
+- ✅ LLM 集成：Gemini API Client + PromptBuilder（AI诊断/知识学习/模型训练）
+- ✅ AI 诊断：5 端点，多轮对话诊断错题根因
+- ✅ 知识学习：5 端点，五步 AI 引导学习
+- ✅ 模型训练：6 端点，分步训练 + 步骤判定
+- ✅ 卷面策略：4 端点，纯规则生成（零 LLM 成本）
+- ✅ 社区投票：6 端点，需求投票 + 反馈收集
+- ✅ 闪卡复习：SM-2 间隔重复算法
+- ✅ 成绩预测 + 周报 + 考试热力图
+- ✅ 图片上传 + 头像功能
+- ✅ Flutter 前端：21 个功能模块全部对接真实 API（Riverpod StateNotifier）
+- ✅ Docker 部署：公网 8.130.16.212:8001 可访问
+- ✅ Apifox 同步：45 端点 + 64 Schema
 
-### 进行中
+### 待完成
 
-- 🔄 mastery_value 0-100 连续掌握度计算 (T007)
-- 🔄 Flutter 首页/知识树/模型树接入真实 API (T006)
-- 🔄 Alembic 迁移验证 + Student 字段默认值修复 (T008)
-
-### 待开发
-
-- ⬜ 图片上传 + OCR/AI 诊断流程
-- ⬜ Atom/Episode 交互模型（参见 `docs/2_22新文档/architecture.md`）
-- ⬜ E/R/S 错误编码体系（参见 `docs/2_22新文档/v1.1part.md`）
-- ⬜ 闪卡复习 SM-2 算法
-- ⬜ 成绩预测模型
-- ⬜ Flutter UI 美化（响应式布局、字体、边框优化）
-- ⬜ Flutter 环境配置 + Android APK 构建
+- ⬜ Google Gemini API Key 配置（用户提供后可测试真实 LLM 对话）
+- ⬜ Flutter APK 构建 + 真机测试
+- ⬜ 教育数据填充（知识点、题目、错因标签等 — 需用户提供）
+- ⬜ E/R/S 错误编码体系（参见 `docs/product/v1.1part.md`）
+- ⬜ 14 个 LOW 级别 bug 修复（非阻塞）
 
 ## 8. 服务器部署
 
