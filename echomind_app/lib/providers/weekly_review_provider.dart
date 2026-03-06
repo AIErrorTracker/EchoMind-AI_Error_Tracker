@@ -2,28 +2,23 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:echomind_app/core/api_client.dart';
 
 class WeeklyReviewData {
-  // 基础统计
   final int totalQuestions;
   final int correctCount;
   final int errorCount;
   final int newMastered;
 
-  // 分数变化
   final double scoreChange;
   final double lastWeekScore;
   final double thisWeekScore;
 
-  // 四维能力
   final double formulaMemoryRate;
   final double modelIdentifyRate;
   final double executionCorrectRate;
   final double overallCorrectRate;
 
-  // 列表数据
   final List<String> progressItems;
   final List<String> focusItems;
 
-  // 计算属性
   double get correctRate =>
       totalQuestions > 0 ? correctCount / totalQuestions : 0;
 
@@ -54,9 +49,12 @@ class WeeklyReviewData {
       scoreChange: (json['score_change'] as num?)?.toDouble() ?? 0,
       lastWeekScore: (json['last_week_score'] as num?)?.toDouble() ?? 0,
       thisWeekScore: (json['this_week_score'] as num?)?.toDouble() ?? 0,
-      formulaMemoryRate: (stats['formula_memory_rate'] as num?)?.toDouble() ?? 0,
-      modelIdentifyRate: (stats['model_identify_rate'] as num?)?.toDouble() ?? 0,
-      executionCorrectRate: (stats['calculation_accuracy'] as num?)?.toDouble() ?? 0,
+      formulaMemoryRate:
+          (stats['formula_memory_rate'] as num?)?.toDouble() ?? 0,
+      modelIdentifyRate:
+          (stats['model_identify_rate'] as num?)?.toDouble() ?? 0,
+      executionCorrectRate:
+          (stats['calculation_accuracy'] as num?)?.toDouble() ?? 0,
       overallCorrectRate: (stats['reading_accuracy'] as num?)?.toDouble() ?? 0,
       progressItems: (json['progress_items'] as List?)?.cast<String>() ?? [],
       focusItems: (json['focus_item_names'] as List?)?.cast<String>() ?? [],
@@ -65,11 +63,6 @@ class WeeklyReviewData {
 }
 
 final weeklyReviewProvider = FutureProvider<WeeklyReviewData>((ref) async {
-  try {
-    final res = await ApiClient().dio.get('/weekly-review');
-    return WeeklyReviewData.fromJson(res.data);
-  } catch (_) {
-    // API 尚未实现时返回默认数据
-    return const WeeklyReviewData();
-  }
+  final res = await ApiClient().dio.get('/weekly-review');
+  return WeeklyReviewData.fromJson(res.data);
 });

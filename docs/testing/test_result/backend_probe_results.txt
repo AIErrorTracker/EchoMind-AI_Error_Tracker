@@ -1,0 +1,37 @@
+﻿
+path                        method status    ok elapsed_ms bytes error                
+----                        ------ ------    -- ---------- ----- -----                
+/auth/login                 POST      200  True        456     0                      
+/auth/me                    GET       200  True        115   184                      
+/community/feedback         GET       200  True        120   230                      
+/community/requests         GET       403 False        101     0 远程服务器返回错误: (403) 已禁止。
+/community/requests         GET       200  True        121   292                      
+/dashboard                  GET       200  True        123   195                      
+/dashboard                  GET       403 False        691     0 远程服务器返回错误: (403) 已禁止。
+/diagnosis/session          GET       200  True        107     4                      
+/exams/heatmap              GET       200  True        129     2                      
+/exams/question-types       GET       404 False         98     0 远程服务器返回错误: (404) 未找到。
+/exams/recent               GET       200  True        123     2                      
+/flashcards                 GET       200  True        129     2                      
+/knowledge/kp_friction      GET       200  True        114   242                      
+/knowledge/tree             GET       200  True        111  1372                      
+/knowledge/tree             GET       200  True        146  1372                      
+/models/model_energy_method GET       200  True        123   265                      
+/models/training/session    GET       200  True        127    63                      
+/models/tree                GET       200  True        123  1113                      
+/models/tree                GET       200  True        122  1113                      
+/prediction/score           GET       403 False         88     0 远程服务器返回错误: (403) 已禁止。
+/prediction/score           GET       200  True        127   306                      
+/questions/aggregate        GET       200  True        109     2                      
+/questions/history          GET       403 False         87     0 远程服务器返回错误: (403) 已禁止。
+/questions/history          GET       200  True        114     2                      
+/recommendations            GET       200  True        113     2                      
+/recommendations            GET       403 False         52     0 远程服务器返回错误: (403) 已禁止。
+/strategy                   GET       200  True        123    38                      
+/strategy                   GET       403 False         93     0 远程服务器返回错误: (403) 已禁止。
+/strategy/templates         GET       200  True        120    67                      
+/weekly-review              GET       200  True        132   340                      
+/weekly-review              GET       403 False         99     0 远程服务器返回错误: (403) 已禁止。
+
+
+

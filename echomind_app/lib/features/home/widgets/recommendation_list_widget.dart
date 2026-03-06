@@ -9,13 +9,6 @@ import 'package:echomind_app/providers/recommendations_provider.dart';
 class RecommendationListWidget extends ConsumerWidget {
   const RecommendationListWidget({super.key});
 
-  static const _mockItems = [
-    (icon: Icons.error_outline_rounded, gradient: AppTheme.gradientPink, title: '待诊断: 2025天津模拟 第5题', tags: ['待诊断', '上传于今日'], route: AppRoutes.aiDiagnosis, isUrgent: true),
-    (icon: Icons.layers_rounded, gradient: AppTheme.gradientPrimary, title: '板块运动 — 建模层训练', tags: ['本周错2次', '约5分钟'], route: AppRoutes.modelDetail, isUrgent: false),
-    (icon: Icons.lightbulb_outline_rounded, gradient: AppTheme.gradientBlue, title: '库仑定律适用条件 — 知识补强', tags: ['理解不深', '约3分钟'], route: AppRoutes.knowledgeDetail, isUrgent: false),
-    (icon: Icons.show_chart_rounded, gradient: AppTheme.gradientGreen, title: '牛顿第二定律应用 — 不稳定', tags: ['掌握不稳定', '14天未练习'], route: AppRoutes.modelDetail, isUrgent: false),
-  ];
-
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final recs = ref.watch(recommendationsProvider);
@@ -25,12 +18,20 @@ class RecommendationListWidget extends ConsumerWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text('推荐学习', style: AppTheme.heading(size: 20, weight: FontWeight.w800)),
+          Text('推荐学习',
+              style: AppTheme.heading(size: 20, weight: FontWeight.w800)),
           const SizedBox(height: 12),
           recs.when(
-            loading: () => const Center(child: Padding(padding: EdgeInsets.all(16), child: CircularProgressIndicator())),
-            error: (_, __) => _buildMockList(context),
-            data: (items) => items.isEmpty ? _buildMockList(context) : _buildApiList(context, items),
+            loading: () => const Center(
+              child: Padding(
+                padding: EdgeInsets.all(16),
+                child: CircularProgressIndicator(),
+              ),
+            ),
+            error: (_, __) => _buildStatusCard('推荐数据加载失败，请检查后端接口与鉴权状态'),
+            data: (items) => items.isEmpty
+                ? _buildStatusCard('暂无推荐数据')
+                : _buildApiList(context, items),
           ),
         ],
       ),
@@ -38,103 +39,67 @@ class RecommendationListWidget extends ConsumerWidget {
   }
 
   Widget _buildApiList(BuildContext context, List<RecommendationItem> items) {
-    return Column(children: [
-      for (final item in items)
-        _RecItem(
-          icon: item.targetType == 'knowledge' ? Icons.lightbulb_outline_rounded : Icons.layers_rounded,
-          gradient: item.isUnstable ? AppTheme.gradientPink : AppTheme.gradientPrimary,
-          title: item.targetName,
-          tags: [
-            if (item.errorCount > 0) '错${item.errorCount}次',
-            if (item.isUnstable) '不稳定',
-            'L${item.currentLevel}',
-          ],
-          onTap: () => context.push(
-            item.targetType == 'knowledge'
-                ? AppRoutes.knowledgeDetailPath(item.targetId)
-                : AppRoutes.modelDetailPath(item.targetId),
-          ),
-        ),
-    ]);
-  }
+    final validItems = items.where((item) {
+      final id = item.targetId.trim();
+      return id.isNotEmpty &&
+          (item.targetType == 'knowledge' || item.targetType == 'model');
+    }).toList();
 
-  Widget _buildMockList(BuildContext context) {
-    return Column(children: [
-      for (final item in _mockItems)
-        item.isUrgent
-            ? _UrgentRecItem(
-                icon: item.icon, gradient: item.gradient,
-                title: item.title, tags: item.tags,
-                onTap: () => context.push(item.route),
-              )
-            : _RecItem(
-                icon: item.icon, gradient: item.gradient,
-                title: item.title, tags: item.tags,
-                onTap: () => context.push(item.route),
-              ),
-    ]);
-  }
-}
+    if (validItems.isEmpty) {
+      return _buildStatusCard('推荐数据缺少可跳转目标（target_id/target_type）');
+    }
 
-// ─── Urgent Recommendation Item (pink left border) ───
-class _UrgentRecItem extends StatelessWidget {
-  final IconData icon;
-  final LinearGradient gradient;
-  final String title;
-  final List<String> tags;
-  final VoidCallback onTap;
-  const _UrgentRecItem({
-    required this.icon, required this.gradient,
-    required this.title, required this.tags, required this.onTap,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.only(bottom: 10),
-      child: GestureDetector(
-        onTap: onTap,
-        child: Container(
-          padding: const EdgeInsets.all(18),
-          decoration: BoxDecoration(
-            color: Colors.white.withValues(alpha: 0.7),
-            borderRadius: BorderRadius.circular(AppTheme.radiusXl),
-            boxShadow: AppTheme.shadowClayCard,
-            border: const Border(
-              left: BorderSide(color: Color(0xFFDB2777), width: 4),
+    return Column(
+      children: [
+        for (final item in validItems)
+          _RecItem(
+            icon: item.targetType == 'knowledge'
+                ? Icons.lightbulb_outline_rounded
+                : Icons.layers_rounded,
+            gradient: item.isUnstable
+                ? AppTheme.gradientPink
+                : AppTheme.gradientPrimary,
+            title: item.targetName,
+            tags: [
+              if (item.errorCount > 0) '错${item.errorCount}次',
+              if (item.isUnstable) '不稳定',
+              'L${item.currentLevel}',
+            ],
+            onTap: () => context.push(
+              item.targetType == 'knowledge'
+                  ? AppRoutes.knowledgeDetailPath(item.targetId)
+                  : AppRoutes.modelDetailPath(item.targetId),
             ),
           ),
-          child: Row(children: [
-            _GradientIconOrb(icon: icon, gradient: gradient, size: 48),
-            const SizedBox(width: 14),
-            Expanded(child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(title,
-                  style: AppTheme.body(size: 16).copyWith(fontWeight: FontWeight.w700),
-                  maxLines: 1, overflow: TextOverflow.ellipsis),
-                const SizedBox(height: 6),
-                Wrap(spacing: 6, children: [for (final t in tags) _Tag(t)]),
-              ],
-            )),
-            const Icon(Icons.chevron_right_rounded, size: 22, color: AppTheme.muted),
-          ]),
-        ),
+      ],
+    );
+  }
+
+  Widget _buildStatusCard(String message) {
+    return ClayCard(
+      radius: AppTheme.radiusXl,
+      padding: const EdgeInsets.all(14),
+      child: Text(
+        message,
+        style: AppTheme.body(size: 13, weight: FontWeight.w600),
       ),
     );
   }
 }
 
-// ─── Normal Recommendation Item ───
 class _RecItem extends StatelessWidget {
   final IconData icon;
   final LinearGradient gradient;
   final String title;
   final List<String> tags;
   final VoidCallback onTap;
+
   const _RecItem({
-    required this.icon, required this.gradient,
-    required this.title, required this.tags, required this.onTap,
+    required this.icon,
+    required this.gradient,
+    required this.title,
+    required this.tags,
+    required this.onTap,
   });
 
   @override
@@ -145,21 +110,30 @@ class _RecItem extends StatelessWidget {
         radius: AppTheme.radiusXl,
         padding: const EdgeInsets.all(14),
         onTap: onTap,
-        child: Row(children: [
-          _GradientIconOrb(icon: icon, gradient: gradient, size: 44),
-          const SizedBox(width: 14),
-          Expanded(child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(title,
-                style: AppTheme.body(size: 15).copyWith(fontWeight: FontWeight.w600),
-                maxLines: 1, overflow: TextOverflow.ellipsis),
-              const SizedBox(height: 6),
-              Wrap(spacing: 6, children: [for (final t in tags) _Tag(t)]),
-            ],
-          )),
-          const Icon(Icons.chevron_right_rounded, size: 22, color: AppTheme.muted),
-        ]),
+        child: Row(
+          children: [
+            _GradientIconOrb(icon: icon, gradient: gradient, size: 44),
+            const SizedBox(width: 14),
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    title,
+                    style: AppTheme.body(size: 15)
+                        .copyWith(fontWeight: FontWeight.w600),
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                  ),
+                  const SizedBox(height: 6),
+                  Wrap(spacing: 6, children: [for (final t in tags) _Tag(t)]),
+                ],
+              ),
+            ),
+            const Icon(Icons.chevron_right_rounded,
+                size: 22, color: AppTheme.muted),
+          ],
+        ),
       ),
     );
   }
@@ -169,18 +143,25 @@ class _GradientIconOrb extends StatelessWidget {
   final IconData icon;
   final LinearGradient gradient;
   final double size;
-  const _GradientIconOrb({required this.icon, required this.gradient, this.size = 44});
+
+  const _GradientIconOrb({
+    required this.icon,
+    required this.gradient,
+    this.size = 44,
+  });
 
   @override
   Widget build(BuildContext context) {
     return Container(
-      width: size, height: size,
+      width: size,
+      height: size,
       decoration: BoxDecoration(
         gradient: gradient,
         borderRadius: BorderRadius.circular(size * 0.32),
         boxShadow: [
           BoxShadow(
-            offset: const Offset(4, 4), blurRadius: 10,
+            offset: const Offset(4, 4),
+            blurRadius: 10,
             color: gradient.colors.last.withValues(alpha: 0.3),
           ),
         ],
@@ -203,7 +184,8 @@ class _Tag extends StatelessWidget {
         color: AppTheme.accent.withValues(alpha: 0.08),
         borderRadius: BorderRadius.circular(10),
       ),
-      child: Text(text, style: AppTheme.label(size: 11, color: AppTheme.accent)),
+      child:
+          Text(text, style: AppTheme.label(size: 11, color: AppTheme.accent)),
     );
   }
 }

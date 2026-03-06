@@ -15,7 +15,7 @@ class CardCategoryListWidget extends ConsumerWidget {
         height: 200,
         child: Center(child: CircularProgressIndicator()),
       ),
-      error: (_, __) => _buildContent(_fallbackCategories),
+      error: (_, __) => _buildStatus('卡片分类加载失败，请检查后端接口与鉴权状态'),
       data: (data) {
         final categories = <_CategoryInfo>[
           _CategoryInfo(
@@ -56,6 +56,19 @@ class CardCategoryListWidget extends ConsumerWidget {
     );
   }
 
+  Widget _buildStatus(String message) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 20),
+      child: ClayCard(
+        padding: const EdgeInsets.all(14),
+        child: Text(
+          message,
+          style: AppTheme.body(size: 13, weight: FontWeight.w600),
+        ),
+      ),
+    );
+  }
+
   Widget _buildContent(List<_CategoryInfo> categories) {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 20),
@@ -92,73 +105,6 @@ class CardCategoryListWidget extends ConsumerWidget {
       ),
     );
   }
-
-  static const _fallbackCategories = [
-    _CategoryInfo(
-      tag: '识别',
-      tagBg: Color(0xFF1C1C1E),
-      tagFg: Colors.white,
-      name: '识别卡',
-      desc: '8张 · 来自模型训练 Step1',
-      review: '3张待复习',
-    ),
-    _CategoryInfo(
-      tag: '决策',
-      tagBg: Color(0xFF48484A),
-      tagFg: Colors.white,
-      name: '决策卡',
-      desc: '6张 · 来自模型训练 Step2',
-      review: '2张待复习',
-    ),
-    _CategoryInfo(
-      tag: '步骤',
-      tagBg: Color(0xFF8E8E93),
-      tagFg: Colors.white,
-      name: '步骤卡',
-      desc: '5张 · 来自模型训练 Step3',
-      review: '1张待复习',
-    ),
-    _CategoryInfo(
-      tag: '陷阱',
-      tagBg: Color(0xFF3A3A3C),
-      tagFg: Colors.white,
-      name: '陷阱卡',
-      desc: '4张 · 来自模型训练 Step4',
-      review: '0',
-    ),
-    _CategoryInfo(
-      tag: '公式',
-      tagBg: Color(0xFF007AFF),
-      tagFg: Colors.white,
-      name: '公式卡',
-      desc: '10张 · 通用',
-      review: '4张待复习',
-    ),
-    _CategoryInfo(
-      tag: '概念',
-      tagBg: Color(0xFFBBDEFB),
-      tagFg: Color(0xFF1565C0),
-      name: '概念卡',
-      desc: '9张 · 来自知识点学习',
-      review: '2张待复习',
-    ),
-    _CategoryInfo(
-      tag: '条件',
-      tagBg: Color(0xFFE3F2FD),
-      tagFg: Color(0xFF1976D2),
-      name: '条件卡',
-      desc: '4张 · 来自知识点学习',
-      review: '0',
-    ),
-    _CategoryInfo(
-      tag: '辨析',
-      tagBg: Color(0xFFF5F9FF),
-      tagFg: Color(0xFF2196F3),
-      name: '辨析卡',
-      desc: '2张 · 来自易混对比',
-      review: '0',
-    ),
-  ];
 }
 
 class _CategoryRow extends StatelessWidget {

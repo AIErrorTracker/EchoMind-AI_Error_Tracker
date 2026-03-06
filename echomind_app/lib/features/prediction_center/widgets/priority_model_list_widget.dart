@@ -18,7 +18,7 @@ class PriorityModelListWidget extends ConsumerWidget {
         height: 80,
         child: Center(child: CircularProgressIndicator()),
       ),
-      error: (_, __) => const SizedBox.shrink(),
+      error: (_, __) => _buildStatus('优先训练模型加载失败，请检查后端接口与鉴权状态'),
       data: (d) => _buildList(context, d.priorityModels),
     );
   }
@@ -33,20 +33,7 @@ class PriorityModelListWidget extends ConsumerWidget {
               style: AppTheme.heading(size: 18, weight: FontWeight.w900)),
           const SizedBox(height: 12),
           if (items.isEmpty)
-            ClayCard(
-              padding: const EdgeInsets.all(14),
-              child: Row(
-                children: [
-                  const Icon(Icons.info_outline,
-                      size: 18, color: AppTheme.muted),
-                  const SizedBox(width: 8),
-                  Expanded(
-                      child: Text('上传更多题目后将生成训练建议。',
-                          style: AppTheme.body(
-                              size: 13, weight: FontWeight.w700))),
-                ],
-              ),
-            )
+            _buildStatus('上传更多题目后将生成训练建议')
           else
             for (var i = 0; i < items.length; i++) ...[
               if (i > 0) const SizedBox(height: 10),
@@ -57,12 +44,33 @@ class PriorityModelListWidget extends ConsumerWidget {
     );
   }
 
+  Widget _buildStatus(String message) {
+    return ClayCard(
+      padding: const EdgeInsets.all(14),
+      child: Row(
+        children: [
+          const Icon(Icons.info_outline, size: 18, color: AppTheme.muted),
+          const SizedBox(width: 8),
+          Expanded(
+            child: Text(
+              message,
+              style: AppTheme.body(size: 13, weight: FontWeight.w700),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
   Widget _buildItem(BuildContext context, int rank, PriorityModel model) {
-    final id = model.modelId.trim().isEmpty ? 'demo' : model.modelId;
+    final modelId = model.modelId.trim();
+    final canNavigate = modelId.isNotEmpty;
     final gradient = _rankGradient(rank);
 
     return ClayCard(
-      onTap: () => context.push(AppRoutes.modelDetailPath(id)),
+      onTap: canNavigate
+          ? () => context.push(AppRoutes.modelDetailPath(modelId))
+          : null,
       padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
       child: Row(
         children: [

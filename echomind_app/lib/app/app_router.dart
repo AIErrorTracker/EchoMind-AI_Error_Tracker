@@ -1,7 +1,9 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/widgets.dart';
 import 'package:go_router/go_router.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:echomind_app/app/app_routes.dart';
+import 'package:echomind_app/core/api_client.dart';
 import 'package:echomind_app/features/auth/login_page.dart';
 import 'package:echomind_app/features/auth/register_page.dart';
 import 'package:echomind_app/features/home/home_page.dart';
@@ -26,13 +28,56 @@ import 'package:echomind_app/features/weekly_review/weekly_review_page.dart';
 import 'package:echomind_app/features/register_strategy/register_strategy_page.dart';
 
 const _authRoutes = {AppRoutes.login, AppRoutes.register};
+const _devBypassAuth = bool.fromEnvironment('DEV_BYPASS_AUTH', defaultValue: false);
+const _devAutoLogin = bool.fromEnvironment('DEV_AUTO_LOGIN', defaultValue: true);
+const _devAutoLoginPhone = String.fromEnvironment('DEV_AUTO_LOGIN_PHONE', defaultValue: '18222830713');
+const _devAutoLoginPassword = String.fromEnvironment('DEV_AUTO_LOGIN_PASSWORD', defaultValue: 'yanbaojie00000');
+final _enableDevAutoLogin = kDebugMode && _devAutoLogin;
+
+Future<bool>? _devAutoLoginFuture;
+
+Future<bool> _ensureDevAutoLogin() {
+  return _devAutoLoginFuture ??= _doDevAutoLogin();
+}
+
+Future<bool> _doDevAutoLogin() async {
+  try {
+    final res = await ApiClient().dio.post('/auth/login', data: {
+      'phone': _devAutoLoginPhone,
+      'password': _devAutoLoginPassword,
+    });
+    final data = res.data as Map<String, dynamic>?;
+    final token = data?['access_token'] as String?;
+    if (token == null || token.isEmpty) return false;
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setString('auth_token', token);
+    return true;
+  } catch (_) {
+    return false;
+  }
+}
 
 final appRouter = GoRouter(
   initialLocation: AppRoutes.home,
   redirect: (BuildContext context, GoRouterState state) async {
+    // Debug-only bypass: run with --dart-define=DEV_BYPASS_AUTH=true
+    // to access protected routes without a token.
+    if (_devBypassAuth) {
+      return null;
+    }
+
     final prefs = await SharedPreferences.getInstance();
     final hasToken = prefs.getString('auth_token') != null;
     final isAuthRoute = _authRoutes.contains(state.matchedLocation);
+
+    // Dev default: auto-login once to get a real auth_token for backend data.
+    if (!hasToken && _enableDevAutoLogin) {
+      final ok = await _ensureDevAutoLogin();
+      if (ok) {
+        return isAuthRoute ? AppRoutes.home : null;
+      }
+    }
+
     if (!hasToken && !isAuthRoute) return AppRoutes.login;
     if (hasToken && isAuthRoute) return AppRoutes.home;
     return null;

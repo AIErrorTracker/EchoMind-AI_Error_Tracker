@@ -1,0 +1,281 @@
+﻿[
+    {
+        "path":  "/dashboard",
+        "method":  "GET",
+        "status":  403,
+        "ok":  false,
+        "elapsed_ms":  691,
+        "bytes":  0,
+        "error":  "远程服务器返回错误: (403) 已禁止。"
+    },
+    {
+        "path":  "/recommendations",
+        "method":  "GET",
+        "status":  403,
+        "ok":  false,
+        "elapsed_ms":  52,
+        "bytes":  0,
+        "error":  "远程服务器返回错误: (403) 已禁止。"
+    },
+    {
+        "path":  "/questions/history",
+        "method":  "GET",
+        "status":  403,
+        "ok":  false,
+        "elapsed_ms":  87,
+        "bytes":  0,
+        "error":  "远程服务器返回错误: (403) 已禁止。"
+    },
+    {
+        "path":  "/knowledge/tree",
+        "method":  "GET",
+        "status":  200,
+        "ok":  true,
+        "elapsed_ms":  146,
+        "bytes":  1372,
+        "error":  ""
+    },
+    {
+        "path":  "/models/tree",
+        "method":  "GET",
+        "status":  200,
+        "ok":  true,
+        "elapsed_ms":  122,
+        "bytes":  1113,
+        "error":  ""
+    },
+    {
+        "path":  "/prediction/score",
+        "method":  "GET",
+        "status":  403,
+        "ok":  false,
+        "elapsed_ms":  88,
+        "bytes":  0,
+        "error":  "远程服务器返回错误: (403) 已禁止。"
+    },
+    {
+        "path":  "/weekly-review",
+        "method":  "GET",
+        "status":  403,
+        "ok":  false,
+        "elapsed_ms":  99,
+        "bytes":  0,
+        "error":  "远程服务器返回错误: (403) 已禁止。"
+    },
+    {
+        "path":  "/strategy",
+        "method":  "GET",
+        "status":  403,
+        "ok":  false,
+        "elapsed_ms":  93,
+        "bytes":  0,
+        "error":  "远程服务器返回错误: (403) 已禁止。"
+    },
+    {
+        "path":  "/community/requests",
+        "method":  "GET",
+        "status":  403,
+        "ok":  false,
+        "elapsed_ms":  101,
+        "bytes":  0,
+        "error":  "远程服务器返回错误: (403) 已禁止。"
+    },
+    {
+        "path":  "/auth/login",
+        "method":  "POST",
+        "status":  200,
+        "ok":  true,
+        "elapsed_ms":  456,
+        "bytes":  0,
+        "error":  ""
+    },
+    {
+        "path":  "/auth/me",
+        "method":  "GET",
+        "status":  200,
+        "ok":  true,
+        "elapsed_ms":  115,
+        "bytes":  184,
+        "error":  ""
+    },
+    {
+        "path":  "/dashboard",
+        "method":  "GET",
+        "status":  200,
+        "ok":  true,
+        "elapsed_ms":  123,
+        "bytes":  195,
+        "error":  ""
+    },
+    {
+        "path":  "/recommendations",
+        "method":  "GET",
+        "status":  200,
+        "ok":  true,
+        "elapsed_ms":  113,
+        "bytes":  2,
+        "error":  ""
+    },
+    {
+        "path":  "/questions/history",
+        "method":  "GET",
+        "status":  200,
+        "ok":  true,
+        "elapsed_ms":  114,
+        "bytes":  2,
+        "error":  ""
+    },
+    {
+        "path":  "/questions/aggregate",
+        "method":  "GET",
+        "status":  200,
+        "ok":  true,
+        "elapsed_ms":  109,
+        "bytes":  2,
+        "error":  ""
+    },
+    {
+        "path":  "/exams/heatmap",
+        "method":  "GET",
+        "status":  200,
+        "ok":  true,
+        "elapsed_ms":  129,
+        "bytes":  2,
+        "error":  ""
+    },
+    {
+        "path":  "/exams/question-types",
+        "method":  "GET",
+        "status":  404,
+        "ok":  false,
+        "elapsed_ms":  98,
+        "bytes":  0,
+        "error":  "远程服务器返回错误: (404) 未找到。"
+    },
+    {
+        "path":  "/exams/recent",
+        "method":  "GET",
+        "status":  200,
+        "ok":  true,
+        "elapsed_ms":  123,
+        "bytes":  2,
+        "error":  ""
+    },
+    {
+        "path":  "/knowledge/tree",
+        "method":  "GET",
+        "status":  200,
+        "ok":  true,
+        "elapsed_ms":  111,
+        "bytes":  1372,
+        "error":  ""
+    },
+    {
+        "path":  "/models/tree",
+        "method":  "GET",
+        "status":  200,
+        "ok":  true,
+        "elapsed_ms":  123,
+        "bytes":  1113,
+        "error":  ""
+    },
+    {
+        "path":  "/prediction/score",
+        "method":  "GET",
+        "status":  200,
+        "ok":  true,
+        "elapsed_ms":  127,
+        "bytes":  306,
+        "error":  ""
+    },
+    {
+        "path":  "/flashcards",
+        "method":  "GET",
+        "status":  200,
+        "ok":  true,
+        "elapsed_ms":  129,
+        "bytes":  2,
+        "error":  ""
+    },
+    {
+        "path":  "/weekly-review",
+        "method":  "GET",
+        "status":  200,
+        "ok":  true,
+        "elapsed_ms":  132,
+        "bytes":  340,
+        "error":  ""
+    },
+    {
+        "path":  "/strategy",
+        "method":  "GET",
+        "status":  200,
+        "ok":  true,
+        "elapsed_ms":  123,
+        "bytes":  38,
+        "error":  ""
+    },
+    {
+        "path":  "/strategy/templates",
+        "method":  "GET",
+        "status":  200,
+        "ok":  true,
+        "elapsed_ms":  120,
+        "bytes":  67,
+        "error":  ""
+    },
+    {
+        "path":  "/community/requests",
+        "method":  "GET",
+        "status":  200,
+        "ok":  true,
+        "elapsed_ms":  121,
+        "bytes":  292,
+        "error":  ""
+    },
+    {
+        "path":  "/community/feedback",
+        "method":  "GET",
+        "status":  200,
+        "ok":  true,
+        "elapsed_ms":  120,
+        "bytes":  230,
+        "error":  ""
+    },
+    {
+        "path":  "/diagnosis/session",
+        "method":  "GET",
+        "status":  200,
+        "ok":  true,
+        "elapsed_ms":  107,
+        "bytes":  4,
+        "error":  ""
+    },
+    {
+        "path":  "/models/training/session",
+        "method":  "GET",
+        "status":  200,
+        "ok":  true,
+        "elapsed_ms":  127,
+        "bytes":  63,
+        "error":  ""
+    },
+    {
+        "path":  "/knowledge/kp_friction",
+        "method":  "GET",
+        "status":  200,
+        "ok":  true,
+        "elapsed_ms":  114,
+        "bytes":  242,
+        "error":  ""
+    },
+    {
+        "path":  "/models/model_energy_method",
+        "method":  "GET",
+        "status":  200,
+        "ok":  true,
+        "elapsed_ms":  123,
+        "bytes":  265,
+        "error":  ""
+    }
+]

@@ -9,33 +9,37 @@ import 'package:echomind_app/shared/widgets/clay_card.dart';
 class QuestionTypeBrowserWidget extends ConsumerWidget {
   const QuestionTypeBrowserWidget({super.key});
 
-  static const _mockTypes = [
-    QuestionTypeItem(
-        title: '选择题', subtitle: '第1-8题', count: '6/8 掌握', level: 4),
-    QuestionTypeItem(
-        title: '实验题', subtitle: '第9-11题', count: '1/3 掌握', level: 2),
-    QuestionTypeItem(
-        title: '计算题', subtitle: '第12-14题', count: '0/3 掌握', level: 0),
-  ];
-
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final typesAsync = ref.watch(questionTypesProvider);
-    final types = typesAsync.whenOrNull(data: (d) => d.isNotEmpty ? d : null) ??
-        _mockTypes;
 
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 20),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text('按题型浏览',
-              style: AppTheme.heading(size: 18, weight: FontWeight.w900)),
+          Text(
+            '按题型浏览',
+            style: AppTheme.heading(size: 18, weight: FontWeight.w900),
+          ),
           const SizedBox(height: 12),
-          for (var i = 0; i < types.length; i++) ...[
-            if (i > 0) const SizedBox(height: 10),
-            _buildTypeCard(context, types[i], i),
-          ],
+          typesAsync.when(
+            loading: () => const Center(child: CircularProgressIndicator()),
+            error: (_, __) => _statusCard('题型数据加载失败，请检查后端接口与鉴权状态'),
+            data: (types) {
+              if (types.isEmpty) {
+                return _statusCard('暂无题型统计数据');
+              }
+              return Column(
+                children: [
+                  for (var i = 0; i < types.length; i++) ...[
+                    if (i > 0) const SizedBox(height: 10),
+                    _buildTypeCard(context, types[i], i),
+                  ],
+                ],
+              );
+            },
+          ),
         ],
       ),
     );
@@ -83,6 +87,17 @@ class QuestionTypeBrowserWidget extends ConsumerWidget {
           const SizedBox(width: 4),
           const Icon(Icons.chevron_right, size: 18, color: AppTheme.muted),
         ],
+      ),
+    );
+  }
+
+  Widget _statusCard(String message) {
+    return ClayCard(
+      padding: const EdgeInsets.all(14),
+      child: Text(
+        message,
+        style: AppTheme.body(size: 13, weight: FontWeight.w600),
+        textAlign: TextAlign.center,
       ),
     );
   }

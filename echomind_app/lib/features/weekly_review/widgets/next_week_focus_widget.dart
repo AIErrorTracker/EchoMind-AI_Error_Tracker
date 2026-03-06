@@ -16,12 +16,26 @@ class NextWeekFocusWidget extends ConsumerWidget {
         height: 80,
         child: Center(child: CircularProgressIndicator()),
       ),
-      error: (_, __) => _buildContent(_fallbackItems),
+      error: (_, __) => _buildStatus('下周重点加载失败，请检查后端接口与鉴权状态'),
       data: (data) {
-        final items =
-            data.focusItems.isEmpty ? _fallbackItems : data.focusItems;
-        return _buildContent(items);
+        if (data.focusItems.isEmpty) {
+          return _buildStatus('暂无下周重点数据');
+        }
+        return _buildContent(data.focusItems);
       },
+    );
+  }
+
+  Widget _buildStatus(String message) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 20),
+      child: ClayCard(
+        padding: const EdgeInsets.all(14),
+        child: Text(
+          message,
+          style: AppTheme.body(size: 13, weight: FontWeight.w600),
+        ),
+      ),
     );
   }
 
@@ -46,15 +60,18 @@ class NextWeekFocusWidget extends ConsumerWidget {
                       Text(
                         '${i + 1}.',
                         style: AppTheme.body(
-                            size: 14,
-                            weight: FontWeight.w800,
-                            color: AppTheme.accent),
+                          size: 14,
+                          weight: FontWeight.w800,
+                          color: AppTheme.accent,
+                        ),
                       ),
                       const SizedBox(width: 6),
                       Expanded(
-                        child: Text(items[i],
-                            style: AppTheme.body(
-                                size: 14, weight: FontWeight.w700)),
+                        child: Text(
+                          items[i],
+                          style:
+                              AppTheme.body(size: 14, weight: FontWeight.w700),
+                        ),
                       ),
                     ],
                   ),
@@ -67,10 +84,4 @@ class NextWeekFocusWidget extends ConsumerWidget {
       ),
     );
   }
-
-  static const _fallbackItems = [
-    '板块运动 -- 完成 Step 1-3 训练',
-    '摩擦力知识点 -- 补强到 L3 以上',
-    '完成 3 张待诊断题目',
-  ];
 }

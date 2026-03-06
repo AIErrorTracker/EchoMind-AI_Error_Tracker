@@ -35,52 +35,6 @@ class ModelTreeWidget extends ConsumerStatefulWidget {
 class _ModelTreeWidgetState extends ConsumerState<ModelTreeWidget> {
   final _expanded = <int>{0};
 
-  static const _fallbackTree = [
-    _FallbackCategory(
-      title: '受力分析模型',
-      level: 4,
-      count: '4/5',
-      items: [
-        _FallbackItem(title: '整体法与隔离法', level: 5),
-        _FallbackItem(title: '共点力平衡', level: 4),
-        _FallbackItem(title: '斜面体模型', level: 3),
-        _FallbackItem(title: '连接体模型', level: 4),
-        _FallbackItem(title: '板块运动', level: 2),
-      ],
-    ),
-    _FallbackCategory(
-      title: '运动学模型',
-      level: 3,
-      count: '2/4',
-      items: [
-        _FallbackItem(title: '匀变速直线运动', level: 4),
-        _FallbackItem(title: '抛体运动', level: 3),
-        _FallbackItem(title: '圆周运动', level: 2),
-        _FallbackItem(title: '追及相遇', level: 1),
-      ],
-    ),
-    _FallbackCategory(
-      title: '能量守恒模型',
-      level: 1,
-      count: '1/3',
-      items: [
-        _FallbackItem(title: '动能定理应用', level: 2),
-        _FallbackItem(title: '机械能守恒', level: 1),
-        _FallbackItem(title: '功能关系', level: 0),
-      ],
-    ),
-    _FallbackCategory(
-      title: '电磁学模型',
-      level: 0,
-      count: '0/3',
-      items: [
-        _FallbackItem(title: '带电粒子在电场中运动', level: 1),
-        _FallbackItem(title: '带电粒子在磁场中运动', level: 0),
-        _FallbackItem(title: '电磁感应综合', level: 0),
-      ],
-    ),
-  ];
-
   @override
   Widget build(BuildContext context) {
     final asyncTree = ref.watch(modelTreeProvider);
@@ -88,10 +42,12 @@ class _ModelTreeWidgetState extends ConsumerState<ModelTreeWidget> {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 20),
       child: asyncTree.when(
-        loading: () => _buildFallbackTree(),
-        error: (_, __) => _buildFallbackTree(),
+        loading: () => _statusCard('模型树加载中...'),
+        error: (_, __) => _statusCard('模型树加载失败，请检查后端接口与鉴权状态'),
         data: (chapters) {
-          if (chapters.isEmpty) return _buildFallbackTree();
+          if (chapters.isEmpty) {
+            return _statusCard('暂无模型树数据');
+          }
           return _buildApiTree(chapters);
         },
       ),
@@ -107,10 +63,11 @@ class _ModelTreeWidgetState extends ConsumerState<ModelTreeWidget> {
       for (final section in chapter.sections) {
         for (final item in section.items) {
           final level = _guessLevel(
-              '${chapter.chapter}|${section.section}|${item.id}|${item.name}');
+            '${chapter.chapter}|${section.section}|${item.id}|${item.name}',
+          );
           leaves.add(
             _ApiLeaf(
-              id: item.id.trim().isEmpty ? 'demo' : item.id,
+              id: item.id.trim(),
               title: item.name,
               level: level,
             ),
@@ -224,9 +181,12 @@ class _ModelTreeWidgetState extends ConsumerState<ModelTreeWidget> {
 
   Widget _buildApiItem(_ApiLeaf item) {
     final color = _levelColor(item.level);
+    final canNavigate = item.id.isNotEmpty;
 
     return GestureDetector(
-      onTap: () => context.push(AppRoutes.modelDetailPath(item.id)),
+      onTap: canNavigate
+          ? () => context.push(AppRoutes.modelDetailPath(item.id))
+          : null,
       behavior: HitTestBehavior.opaque,
       child: Container(
         margin: const EdgeInsets.only(top: 6),
@@ -256,125 +216,12 @@ class _ModelTreeWidgetState extends ConsumerState<ModelTreeWidget> {
     );
   }
 
-  Widget _buildFallbackTree() {
-    return Column(
-      children: [
-        for (var i = 0; i < _fallbackTree.length; i++) ...[
-          if (i > 0) const SizedBox(height: 14),
-          _buildFallbackCategory(i, _fallbackTree[i]),
-        ],
-      ],
-    );
-  }
-
-  Widget _buildFallbackCategory(int index, _FallbackCategory category) {
-    final open = _expanded.contains(index);
-    final color = _levelColor(category.level);
-
+  Widget _statusCard(String message) {
     return ClayCard(
-      radius: AppTheme.radiusCard,
-      padding: EdgeInsets.zero,
-      child: Column(
-        children: [
-          GestureDetector(
-            onTap: () => setState(() {
-              if (open) {
-                _expanded.remove(index);
-              } else {
-                _expanded.add(index);
-              }
-            }),
-            behavior: HitTestBehavior.opaque,
-            child: Padding(
-              padding: const EdgeInsets.fromLTRB(18, 18, 18, 16),
-              child: Row(
-                children: [
-                  Container(
-                    width: 4,
-                    height: 36,
-                    decoration: BoxDecoration(
-                      color: color,
-                      borderRadius: BorderRadius.circular(2),
-                    ),
-                  ),
-                  const SizedBox(width: 14),
-                  Expanded(
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          category.title,
-                          style: AppTheme.heading(
-                              size: 22, weight: FontWeight.w800),
-                        ),
-                        const SizedBox(height: 4),
-                        Text(
-                          '掌握 ${category.count}',
-                          style:
-                              AppTheme.label(size: 13, color: AppTheme.muted),
-                        ),
-                      ],
-                    ),
-                  ),
-                  _LevelPill(category.level),
-                  const SizedBox(width: 8),
-                  AnimatedRotation(
-                    turns: open ? 0.25 : 0,
-                    duration: const Duration(milliseconds: 200),
-                    child: const Icon(
-                      Icons.chevron_right_rounded,
-                      size: 24,
-                      color: AppTheme.muted,
-                    ),
-                  ),
-                ],
-              ),
-            ),
-          ),
-          if (open)
-            Padding(
-              padding: const EdgeInsets.fromLTRB(14, 0, 14, 14),
-              child: Column(
-                children: [
-                  for (final item in category.items) _buildFallbackItem(item),
-                ],
-              ),
-            ),
-        ],
-      ),
-    );
-  }
-
-  Widget _buildFallbackItem(_FallbackItem item) {
-    final color = _levelColor(item.level);
-
-    return GestureDetector(
-      onTap: () => context.push(AppRoutes.modelDetailPath('demo')),
-      behavior: HitTestBehavior.opaque,
-      child: Container(
-        margin: const EdgeInsets.only(top: 6),
-        padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 12),
-        decoration: BoxDecoration(
-          color: AppTheme.canvas,
-          borderRadius: BorderRadius.circular(AppTheme.radiusLg),
-        ),
-        child: Row(
-          children: [
-            Container(
-              width: 7,
-              height: 7,
-              decoration: BoxDecoration(color: color, shape: BoxShape.circle),
-            ),
-            const SizedBox(width: 10),
-            Expanded(
-              child: Text(
-                item.title,
-                style: AppTheme.body(size: 16, weight: FontWeight.w600),
-              ),
-            ),
-            _LevelPill(item.level),
-          ],
-        ),
+      padding: const EdgeInsets.all(14),
+      child: Text(
+        message,
+        style: AppTheme.body(size: 13, weight: FontWeight.w600),
       ),
     );
   }
@@ -434,30 +281,6 @@ class _ApiLeaf {
 
   const _ApiLeaf({
     required this.id,
-    required this.title,
-    required this.level,
-  });
-}
-
-class _FallbackCategory {
-  final String title;
-  final int level;
-  final String count;
-  final List<_FallbackItem> items;
-
-  const _FallbackCategory({
-    required this.title,
-    required this.level,
-    required this.count,
-    required this.items,
-  });
-}
-
-class _FallbackItem {
-  final String title;
-  final int level;
-
-  const _FallbackItem({
     required this.title,
     required this.level,
   });

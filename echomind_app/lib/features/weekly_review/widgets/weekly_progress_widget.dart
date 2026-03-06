@@ -11,18 +11,6 @@ class WeeklyProgressWidget extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final asyncData = ref.watch(weeklyReviewProvider);
 
-    final entries = asyncData.when(
-      loading: () => _fallbackEntries,
-      error: (_, __) => _fallbackEntries,
-      data: (data) {
-        if (data.progressItems.isEmpty) return _fallbackEntries;
-        return List<_ProgressEntry>.generate(data.progressItems.length, (i) {
-          final text = data.progressItems[i];
-          return _entryFromText(text, i);
-        });
-      },
-    );
-
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 20),
       child: Column(
@@ -31,13 +19,26 @@ class WeeklyProgressWidget extends ConsumerWidget {
           Text('本周进展',
               style: AppTheme.heading(size: 18, weight: FontWeight.w900)),
           const SizedBox(height: 12),
-          Column(
-            children: [
-              for (var i = 0; i < entries.length; i++) ...[
-                if (i > 0) const SizedBox(height: 10),
-                _buildItem(entries[i]),
-              ],
-            ],
+          asyncData.when(
+            loading: () => const Center(child: CircularProgressIndicator()),
+            error: (_, __) => _statusCard('本周进展加载失败，请检查后端接口与鉴权状态'),
+            data: (data) {
+              if (data.progressItems.isEmpty) {
+                return _statusCard('暂无本周进展数据');
+              }
+              final entries = List<_ProgressEntry>.generate(
+                data.progressItems.length,
+                (i) => _entryFromText(data.progressItems[i], i),
+              );
+              return Column(
+                children: [
+                  for (var i = 0; i < entries.length; i++) ...[
+                    if (i > 0) const SizedBox(height: 10),
+                    _buildItem(entries[i]),
+                  ],
+                ],
+              );
+            },
           ),
         ],
       ),
@@ -90,12 +91,22 @@ class WeeklyProgressWidget extends ConsumerWidget {
     );
   }
 
+  Widget _statusCard(String message) {
+    return ClayCard(
+      padding: const EdgeInsets.all(14),
+      child: Text(
+        message,
+        style: AppTheme.body(size: 13, weight: FontWeight.w600),
+      ),
+    );
+  }
+
   _ProgressEntry _entryFromText(String text, int index) {
     final normalized = text.trim();
     final parts = normalized.split(RegExp(r'\s*[-—–]{1,2}\s*'));
     final name = parts.isNotEmpty && parts.first.isNotEmpty
         ? parts.first
-        : '学习项 ${index + 1}';
+        : '学习项${index + 1}';
     final desc = normalized;
 
     final lower = normalized.toLowerCase();
@@ -119,30 +130,6 @@ class WeeklyProgressWidget extends ConsumerWidget {
       dotColor: dotColor,
     );
   }
-
-  static const _fallbackEntries = [
-    _ProgressEntry(
-      name: '匀变速直线运动',
-      desc: 'L3 --> L4 -- 做对过',
-      status: 'UP',
-      isUp: true,
-      dotColor: AppTheme.success,
-    ),
-    _ProgressEntry(
-      name: '牛顿第二定律应用',
-      desc: 'L2 --> L3 -- 执行正确一次',
-      status: 'UP',
-      isUp: true,
-      dotColor: AppTheme.warning,
-    ),
-    _ProgressEntry(
-      name: '板块运动',
-      desc: 'L1 --> L1 -- 仍在建模层卡住',
-      status: '--',
-      isUp: false,
-      dotColor: AppTheme.danger,
-    ),
-  ];
 }
 
 class _ProgressEntry {

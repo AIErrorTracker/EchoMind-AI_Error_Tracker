@@ -9,36 +9,37 @@ import 'package:echomind_app/shared/widgets/clay_card.dart';
 class RecentExamsWidget extends ConsumerWidget {
   const RecentExamsWidget({super.key});
 
-  static const _mockExams = [
-    RecentExam(
-        id: 'mock',
-        title: '2025 天津模拟卷（一）',
-        date: '2025-01-15',
-        count: '14/20 已录入'),
-    RecentExam(
-        id: 'mock', title: '2024 全国甲卷', date: '2024-12-20', count: '20/20 已录入'),
-    RecentExam(
-        id: 'mock', title: '2024 天津期末卷', date: '2024-11-30', count: '8/20 已录入'),
-  ];
-
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final examsAsync = ref.watch(recentExamsProvider);
-    final exams = examsAsync.whenOrNull(data: (d) => d.isNotEmpty ? d : null) ??
-        _mockExams;
 
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 20),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text('最近卷子',
-              style: AppTheme.heading(size: 18, weight: FontWeight.w900)),
+          Text(
+            '最近试卷',
+            style: AppTheme.heading(size: 18, weight: FontWeight.w900),
+          ),
           const SizedBox(height: 12),
-          for (var i = 0; i < exams.length; i++) ...[
-            if (i > 0) const SizedBox(height: 10),
-            _buildExamCard(context, exams[i]),
-          ],
+          examsAsync.when(
+            loading: () => const Center(child: CircularProgressIndicator()),
+            error: (_, __) => _statusCard('最近试卷加载失败，请检查后端接口与鉴权状态'),
+            data: (exams) {
+              if (exams.isEmpty) {
+                return _statusCard('暂无最近试卷数据');
+              }
+              return Column(
+                children: [
+                  for (var i = 0; i < exams.length; i++) ...[
+                    if (i > 0) const SizedBox(height: 10),
+                    _buildExamCard(context, exams[i]),
+                  ],
+                ],
+              );
+            },
+          ),
         ],
       ),
     );
@@ -64,8 +65,11 @@ class RecentExamsWidget extends ConsumerWidget {
                 ),
               ],
             ),
-            child: const Icon(Icons.description_outlined,
-                color: Colors.white, size: 20),
+            child: const Icon(
+              Icons.description_outlined,
+              color: Colors.white,
+              size: 20,
+            ),
           ),
           const SizedBox(width: 14),
           Expanded(
@@ -86,6 +90,17 @@ class RecentExamsWidget extends ConsumerWidget {
           ),
           const Icon(Icons.chevron_right, size: 18, color: AppTheme.muted),
         ],
+      ),
+    );
+  }
+
+  Widget _statusCard(String message) {
+    return ClayCard(
+      padding: const EdgeInsets.all(14),
+      child: Text(
+        message,
+        style: AppTheme.body(size: 13, weight: FontWeight.w600),
+        textAlign: TextAlign.center,
       ),
     );
   }

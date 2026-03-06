@@ -9,29 +9,6 @@ import 'package:echomind_app/shared/widgets/clay_card.dart';
 class ExamHeatmapWidget extends ConsumerWidget {
   const ExamHeatmapWidget({super.key});
 
-  static const _fallbackQuestions = [
-    HeatmapQuestion(num: 5, freq: 18, level: 1),
-    HeatmapQuestion(num: 10, freq: 16, level: 0),
-    HeatmapQuestion(num: 15, freq: 15, level: 0),
-    HeatmapQuestion(num: 7, freq: 12, level: 2),
-    HeatmapQuestion(num: 13, freq: 11, level: 1),
-    HeatmapQuestion(num: 19, freq: 10, level: 1),
-    HeatmapQuestion(num: 4, freq: 9, level: 3),
-    HeatmapQuestion(num: 9, freq: 8, level: 3),
-    HeatmapQuestion(num: 14, freq: 8, level: 3),
-    HeatmapQuestion(num: 18, freq: 7, level: 2),
-    HeatmapQuestion(num: 12, freq: 6, level: 2),
-    HeatmapQuestion(num: 20, freq: 6, level: 3),
-    HeatmapQuestion(num: 2, freq: 5, level: 4),
-    HeatmapQuestion(num: 6, freq: 5, level: 4),
-    HeatmapQuestion(num: 11, freq: 4, level: 4),
-    HeatmapQuestion(num: 17, freq: 4, level: 4),
-    HeatmapQuestion(num: 1, freq: 3, level: 5),
-    HeatmapQuestion(num: 3, freq: 2, level: 5),
-    HeatmapQuestion(num: 8, freq: 2, level: 5),
-    HeatmapQuestion(num: 16, freq: 2, level: 5),
-  ];
-
   static const _legend = [
     (label: '未掌握', level: 0),
     (label: '薄弱', level: 1),
@@ -54,82 +31,105 @@ class ExamHeatmapWidget extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final heatmapAsync = ref.watch(examHeatmapProvider);
 
-    final questions = heatmapAsync.whenOrNull(
-          data: (d) => d.isNotEmpty ? _normalize(d) : null,
-        ) ??
-        _fallbackQuestions;
-
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 20),
-      child: ClayCard(
-        padding: const EdgeInsets.all(20),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text('题号热力图',
-                style: AppTheme.heading(size: 18, weight: FontWeight.w900)),
-            const SizedBox(height: 14),
-            LayoutBuilder(
-              builder: (context, constraints) {
-                final size = constraints.maxWidth;
-                final rects = _layoutTreemap(questions, size, size);
+      child: heatmapAsync.when(
+        loading: () => _statusCard('题号热力图加载中...'),
+        error: (_, __) => _statusCard('题号热力图加载失败，请检查后端接口与鉴权状态'),
+        data: (data) {
+          if (data.isEmpty) {
+            return _statusCard('暂无题号热力图数据');
+          }
+          final questions = _normalize(data);
+          return ClayCard(
+            padding: const EdgeInsets.all(20),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text('题号热力图',
+                    style: AppTheme.heading(size: 18, weight: FontWeight.w900)),
+                const SizedBox(height: 14),
+                LayoutBuilder(
+                  builder: (context, constraints) {
+                    final size = constraints.maxWidth;
+                    final rects = _layoutTreemap(questions, size, size);
 
-                return SizedBox(
-                  width: size,
-                  height: size,
-                  child: Stack(
-                    children: [
-                      for (var i = 0; i < rects.length; i++)
-                        Positioned(
-                          left: rects[i].left,
-                          top: rects[i].top,
-                          width: rects[i].width,
-                          height: rects[i].height,
-                          child: GestureDetector(
-                            onTap: () =>
-                                context.push(AppRoutes.questionAggregate),
-                            child: Container(
-                              margin: const EdgeInsets.all(2),
-                              decoration: BoxDecoration(
-                                color: _levelColor(questions[i].level),
-                                borderRadius:
-                                    BorderRadius.circular(AppTheme.radiusSm),
+                    return SizedBox(
+                      width: size,
+                      height: size,
+                      child: Stack(
+                        children: [
+                          for (var i = 0; i < rects.length; i++)
+                            Positioned(
+                              left: rects[i].left,
+                              top: rects[i].top,
+                              width: rects[i].width,
+                              height: rects[i].height,
+                              child: GestureDetector(
+                                onTap: () =>
+                                    context.push(AppRoutes.questionAggregate),
+                                child: Container(
+                                  margin: const EdgeInsets.all(2),
+                                  decoration: BoxDecoration(
+                                    color: _levelColor(questions[i].level),
+                                    borderRadius: BorderRadius.circular(
+                                        AppTheme.radiusSm),
+                                  ),
+                                  alignment: Alignment.center,
+                                  child: _buildLabel(questions[i], rects[i]),
+                                ),
                               ),
-                              alignment: Alignment.center,
-                              child: _buildLabel(questions[i], rects[i]),
+                            ),
+                        ],
+                      ),
+                    );
+                  },
+                ),
+                const SizedBox(height: 14),
+                Wrap(
+                  spacing: 12,
+                  runSpacing: 6,
+                  children: [
+                    for (final l in _legend)
+                      Row(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          Container(
+                            width: 12,
+                            height: 12,
+                            decoration: BoxDecoration(
+                              color: _levelColor(l.level),
+                              borderRadius: BorderRadius.circular(4),
                             ),
                           ),
-                        ),
-                    ],
-                  ),
-                );
-              },
-            ),
-            const SizedBox(height: 14),
-            Wrap(
-              spacing: 12,
-              runSpacing: 6,
-              children: [
-                for (final l in _legend)
-                  Row(
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      Container(
-                        width: 12,
-                        height: 12,
-                        decoration: BoxDecoration(
-                          color: _levelColor(l.level),
-                          borderRadius: BorderRadius.circular(4),
-                        ),
+                          const SizedBox(width: 5),
+                          Text(l.label, style: AppTheme.label(size: 11)),
+                        ],
                       ),
-                      const SizedBox(width: 5),
-                      Text(l.label, style: AppTheme.label(size: 11)),
-                    ],
-                  ),
+                  ],
+                ),
               ],
             ),
-          ],
-        ),
+          );
+        },
+      ),
+    );
+  }
+
+  Widget _statusCard(String message) {
+    return ClayCard(
+      padding: const EdgeInsets.all(20),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text('题号热力图',
+              style: AppTheme.heading(size: 18, weight: FontWeight.w900)),
+          const SizedBox(height: 14),
+          Text(
+            message,
+            style: AppTheme.body(size: 13, weight: FontWeight.w600),
+          ),
+        ],
       ),
     );
   }

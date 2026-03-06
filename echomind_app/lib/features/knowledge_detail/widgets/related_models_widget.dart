@@ -11,7 +11,6 @@ class RelatedModelsWidget extends ConsumerWidget {
 
   const RelatedModelsWidget({super.key, required this.kpId});
 
-  static const _fallbackItems = ['受力分析模型', '电场叠加模型'];
   static const _dotColors = [
     Color(0xFFFF9500),
     Color(0xFFAEAEB2),
@@ -22,8 +21,6 @@ class RelatedModelsWidget extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final detail = ref.watch(knowledgeDetailProvider(kpId));
-    final ids = detail.whenOrNull(data: (d) => d.relatedModelIds);
-    final items = (ids != null && ids.isNotEmpty) ? ids : _fallbackItems;
 
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 20),
@@ -41,21 +38,44 @@ class RelatedModelsWidget extends ConsumerWidget {
             ],
           ),
           const SizedBox(height: 10),
-          Column(
-            children: [
-              for (int i = 0; i < items.length; i++) ...[
-                if (i > 0) const SizedBox(height: 10),
-                _item(
-                  context: context,
-                  id: items[i],
-                  name: items[i],
-                  desc: '点击进入模型详情',
-                  dotColor: _dotColors[i % _dotColors.length],
-                ),
-              ],
-            ],
+          detail.when(
+            loading: () => const Center(child: CircularProgressIndicator()),
+            error: (_, __) => _statusCard('关联模型加载失败，请检查后端接口与鉴权状态'),
+            data: (d) {
+              final ids = (d.relatedModelIds ?? const <String>[])
+                  .map((e) => e.trim())
+                  .where((e) => e.isNotEmpty)
+                  .toList();
+              if (ids.isEmpty) {
+                return _statusCard('暂无关联模型数据');
+              }
+              return Column(
+                children: [
+                  for (int i = 0; i < ids.length; i++) ...[
+                    if (i > 0) const SizedBox(height: 10),
+                    _item(
+                      context: context,
+                      id: ids[i],
+                      name: ids[i],
+                      desc: '点击进入模型详情',
+                      dotColor: _dotColors[i % _dotColors.length],
+                    ),
+                  ],
+                ],
+              );
+            },
           ),
         ],
+      ),
+    );
+  }
+
+  Widget _statusCard(String message) {
+    return ClayCard(
+      padding: const EdgeInsets.all(14),
+      child: Text(
+        message,
+        style: AppTheme.body(size: 13, weight: FontWeight.w600),
       ),
     );
   }
@@ -104,7 +124,7 @@ class RelatedModelsWidget extends ConsumerWidget {
               ],
             ),
           ),
-          Icon(Icons.chevron_right, size: 18, color: AppTheme.muted),
+          const Icon(Icons.chevron_right, size: 18, color: AppTheme.muted),
         ],
       ),
     );

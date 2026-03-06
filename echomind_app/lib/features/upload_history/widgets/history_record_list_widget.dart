@@ -10,22 +10,15 @@ import 'package:echomind_app/shared/widgets/clay_card.dart';
 class HistoryRecordListWidget extends ConsumerWidget {
   const HistoryRecordListWidget({super.key});
 
-  static const _mockItems = [
-    ('拍照上传', '2025-01-15 14:30', '已完成', true),
-    ('手动录入', '2025-01-15 10:15', '已完成', true),
-    ('拍照上传', '2025-01-14 16:45', '待诊断', false),
-    ('拍照上传', '2025-01-12 09:20', '已完成', true),
-  ];
-
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final historyAsync = ref.watch(uploadHistoryProvider);
 
     return historyAsync.when(
       loading: () => const Center(child: CircularProgressIndicator()),
-      error: (_, __) => _buildMockList(context),
+      error: (_, __) => _buildStatusList('历史记录加载失败，请检查后端接口与鉴权状态'),
       data: (groups) => groups.isEmpty
-          ? _buildMockList(context)
+          ? _buildStatusList('暂无历史记录数据')
           : _buildApiList(context, groups),
     );
   }
@@ -35,14 +28,21 @@ class HistoryRecordListWidget extends ConsumerWidget {
 
     for (final group in groups) {
       for (final question in group.questions) {
-        records.add(_HistoryRecord(
-          id: question.id.trim().isEmpty ? 'demo' : question.id,
-          source: _sourceLabel(question.source),
-          time: _displayTime(question.createdAt, group.date),
-          status: _statusLabel(question.diagnosisStatus),
-          done: _isDone(question.diagnosisStatus),
-        ));
+        final id = question.id.trim();
+        records.add(
+          _HistoryRecord(
+            id: id.isEmpty ? null : id,
+            source: _sourceLabel(question.source),
+            time: _displayTime(question.createdAt, group.date),
+            status: _statusLabel(question.diagnosisStatus),
+            done: _isDone(question.diagnosisStatus),
+          ),
+        );
       }
+    }
+
+    if (records.isEmpty) {
+      return _buildStatusList('暂无可展示的历史记录');
     }
 
     return ListView.separated(
@@ -53,29 +53,26 @@ class HistoryRecordListWidget extends ConsumerWidget {
     );
   }
 
-  Widget _buildMockList(BuildContext context) {
-    return ListView.separated(
+  Widget _buildStatusList(String message) {
+    return ListView(
       padding: const EdgeInsets.fromLTRB(20, 0, 20, 24),
-      itemCount: _mockItems.length,
-      separatorBuilder: (_, __) => const SizedBox(height: 10),
-      itemBuilder: (_, i) {
-        final (source, time, status, done) = _mockItems[i];
-        return _buildCard(
-          context,
-          _HistoryRecord(
-              id: 'demo',
-              source: source,
-              time: time,
-              status: status,
-              done: done),
-        );
-      },
+      children: [
+        ClayCard(
+          padding: const EdgeInsets.all(14),
+          child: Text(
+            message,
+            style: AppTheme.body(size: 13, weight: FontWeight.w600),
+          ),
+        ),
+      ],
     );
   }
 
   Widget _buildCard(BuildContext context, _HistoryRecord record) {
     return ClayCard(
-      onTap: () => context.push(AppRoutes.questionDetailPath(record.id)),
+      onTap: record.id == null
+          ? null
+          : () => context.push(AppRoutes.questionDetailPath(record.id!)),
       padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 12),
       child: Row(
         children: [
@@ -117,8 +114,9 @@ class HistoryRecordListWidget extends ConsumerWidget {
             child: Text(
               record.status,
               style: AppTheme.label(
-                  size: 11,
-                  color: record.done ? AppTheme.success : AppTheme.warning),
+                size: 11,
+                color: record.done ? AppTheme.success : AppTheme.warning,
+              ),
             ),
           ),
           const SizedBox(width: 6),
@@ -162,7 +160,7 @@ class HistoryRecordListWidget extends ConsumerWidget {
 }
 
 class _HistoryRecord {
-  final String id;
+  final String? id;
   final String source;
   final String time;
   final String status;

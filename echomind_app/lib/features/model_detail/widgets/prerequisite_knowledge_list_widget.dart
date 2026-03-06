@@ -15,24 +15,6 @@ class PrerequisiteKnowledgeListWidget extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final detail = ref.watch(modelDetailProvider(modelId));
 
-    final items = detail.when(
-      loading: () => _fallbackItems,
-      error: (_, __) => _fallbackItems,
-      data: (d) {
-        final ids = d.prerequisiteKpIds ?? const <String>[];
-        if (ids.isEmpty) return _fallbackItems;
-        return List<_PrerequisiteItem>.generate(ids.length, (i) {
-          final id = ids[i].trim();
-          return _PrerequisiteItem(
-            id: id.isEmpty ? 'demo' : id,
-            name: id.isEmpty ? '前置知识点' : id,
-            desc: _descByIndex(i),
-            color: _colorByIndex(i),
-          );
-        });
-      },
-    );
-
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 20),
       child: Column(
@@ -41,43 +23,84 @@ class PrerequisiteKnowledgeListWidget extends ConsumerWidget {
           Text('前置知识点',
               style: AppTheme.heading(size: 18, weight: FontWeight.w900)),
           const SizedBox(height: 10),
-          Column(
-            children: [
-              for (var i = 0; i < items.length; i++) ...[
-                _buildItem(context, items[i]),
-                if (i < items.length - 1) const SizedBox(height: 10),
-              ],
-            ],
-          ),
-          const SizedBox(height: 10),
-          ClayCard(
-            padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 10),
-            child: Row(
-              children: [
-                Container(
-                  width: 28,
-                  height: 28,
-                  decoration: BoxDecoration(
-                    gradient: AppTheme.gradientBlue,
-                    borderRadius: BorderRadius.circular(AppTheme.radiusSm),
+          detail.when(
+            loading: () => const Center(child: CircularProgressIndicator()),
+            error: (_, __) => _statusCard('前置知识点加载失败，请检查后端接口与鉴权状态'),
+            data: (d) {
+              final ids = (d.prerequisiteKpIds ?? const <String>[])
+                  .map((e) => e.trim())
+                  .where((e) => e.isNotEmpty)
+                  .toList();
+              if (ids.isEmpty) {
+                return _statusCard('暂无前置知识点数据');
+              }
+              final items = List<_PrerequisiteItem>.generate(ids.length, (i) {
+                return _PrerequisiteItem(
+                  id: ids[i],
+                  name: ids[i],
+                  desc: _descByIndex(i),
+                  color: _colorByIndex(i),
+                );
+              });
+
+              return Column(
+                children: [
+                  Column(
+                    children: [
+                      for (var i = 0; i < items.length; i++) ...[
+                        _buildItem(context, items[i]),
+                        if (i < items.length - 1) const SizedBox(height: 10),
+                      ],
+                    ],
                   ),
-                  child: const Icon(Icons.lightbulb_outline,
-                      size: 14, color: Colors.white),
-                ),
-                const SizedBox(width: 10),
-                Expanded(
-                  child: Text(
-                    '建议先学习 "${items.first.name}"，掌握后训练效果更好',
-                    style: AppTheme.label(
-                      size: 13,
-                      color: const Color(0xFF1D4ED8),
+                  const SizedBox(height: 10),
+                  ClayCard(
+                    padding: const EdgeInsets.symmetric(
+                        horizontal: 14, vertical: 10),
+                    child: Row(
+                      children: [
+                        Container(
+                          width: 28,
+                          height: 28,
+                          decoration: BoxDecoration(
+                            gradient: AppTheme.gradientBlue,
+                            borderRadius:
+                                BorderRadius.circular(AppTheme.radiusSm),
+                          ),
+                          child: const Icon(
+                            Icons.lightbulb_outline,
+                            size: 14,
+                            color: Colors.white,
+                          ),
+                        ),
+                        const SizedBox(width: 10),
+                        Expanded(
+                          child: Text(
+                            '建议先学习“${items.first.name}”，掌握后训练效果更好',
+                            style: AppTheme.label(
+                              size: 13,
+                              color: const Color(0xFF1D4ED8),
+                            ),
+                          ),
+                        ),
+                      ],
                     ),
                   ),
-                ),
-              ],
-            ),
+                ],
+              );
+            },
           ),
         ],
+      ),
+    );
+  }
+
+  Widget _statusCard(String message) {
+    return ClayCard(
+      padding: const EdgeInsets.all(14),
+      child: Text(
+        message,
+        style: AppTheme.body(size: 13, weight: FontWeight.w600),
       ),
     );
   }
@@ -128,21 +151,6 @@ class PrerequisiteKnowledgeListWidget extends ConsumerWidget {
       ),
     );
   }
-
-  static const _fallbackItems = [
-    _PrerequisiteItem(
-      id: 'demo',
-      name: '牛顿第二定律',
-      desc: 'L3 · 使用出错',
-      color: Color(0xFFFF9500),
-    ),
-    _PrerequisiteItem(
-      id: 'demo',
-      name: '摩擦力分析',
-      desc: 'L2 · 理解不深',
-      color: AppTheme.danger,
-    ),
-  ];
 
   static Color _colorByIndex(int index) => switch (index % 4) {
         0 => const Color(0xFFFF9500),

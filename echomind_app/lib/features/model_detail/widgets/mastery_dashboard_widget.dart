@@ -17,108 +17,118 @@ class MasteryDashboardWidget extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final detail = ref.watch(modelDetailProvider(modelId));
 
-    final data = detail.when(
-      loading: _DashboardData.fallback,
-      error: (_, __) => _DashboardData.fallback(),
-      data: _DashboardData.fromDetail,
-    );
-
-    final info = MasteryUtils.levelInfo(data.level);
-
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 20),
-      child: Column(
-        children: [
-          ClayCard(
-            padding: const EdgeInsets.all(18),
-            child: Column(
-              children: [
-                Text('当前掌握度', style: AppTheme.label(size: 13)),
-                const SizedBox(height: 4),
-                Text(
-                  'L${data.level}',
-                  style: AppTheme.heading(size: 36, weight: FontWeight.w900)
-                      .copyWith(color: info.color),
-                ),
-                Text(
-                  data.levelLabel,
-                  style: AppTheme.body(size: 15, weight: FontWeight.w800),
-                ),
-                const SizedBox(height: 2),
-                Text(data.levelDesc, style: AppTheme.label(size: 13)),
-                const SizedBox(height: 18),
-                Column(
+      child: detail.when(
+        loading: () => _statusCard('模型掌握度加载中...'),
+        error: (_, __) => _statusCard('模型掌握度加载失败，请检查后端接口与鉴权状态'),
+        data: (modelDetail) {
+          final data = _DashboardData.fromDetail(modelDetail);
+          final info = MasteryUtils.levelInfo(data.level);
+          return Column(
+            children: [
+              ClayCard(
+                padding: const EdgeInsets.all(18),
+                child: Column(
                   children: [
-                    for (var i = 0; i < data.funnelLayers.length; i++) ...[
-                      if (i > 0) const SizedBox(height: 6),
-                      _funnelBar(data.funnelLayers[i]),
-                    ],
+                    Text('当前掌握度', style: AppTheme.label(size: 13)),
+                    const SizedBox(height: 4),
+                    Text(
+                      'L${data.level}',
+                      style: AppTheme.heading(size: 36, weight: FontWeight.w900)
+                          .copyWith(color: info.color),
+                    ),
+                    Text(
+                      data.levelLabel,
+                      style: AppTheme.body(size: 15, weight: FontWeight.w800),
+                    ),
+                    const SizedBox(height: 2),
+                    Text(data.levelDesc, style: AppTheme.label(size: 13)),
+                    const SizedBox(height: 18),
+                    Column(
+                      children: [
+                        for (var i = 0; i < data.funnelLayers.length; i++) ...[
+                          if (i > 0) const SizedBox(height: 6),
+                          _funnelBar(data.funnelLayers[i]),
+                        ],
+                      ],
+                    ),
+                    const SizedBox(height: 14),
+                    Container(
+                      width: double.infinity,
+                      padding: const EdgeInsets.symmetric(
+                          vertical: 10, horizontal: 14),
+                      decoration: BoxDecoration(
+                        color: AppTheme.canvas,
+                        borderRadius: BorderRadius.circular(AppTheme.radiusMd),
+                      ),
+                      child: Column(
+                        children: [
+                          Text('解决后预估', style: AppTheme.label(size: 13)),
+                          const SizedBox(height: 2),
+                          Text(
+                            data.predictedGain,
+                            style: AppTheme.heading(
+                                    size: 22, weight: FontWeight.w900)
+                                .copyWith(color: AppTheme.accent),
+                          ),
+                          const SizedBox(height: 2),
+                          Text(data.relatedQuestion,
+                              style: AppTheme.label(size: 11)),
+                        ],
+                      ),
+                    ),
                   ],
                 ),
-                const SizedBox(height: 14),
-                Container(
-                  width: double.infinity,
-                  padding:
-                      const EdgeInsets.symmetric(vertical: 10, horizontal: 14),
-                  decoration: BoxDecoration(
-                    color: AppTheme.canvas,
-                    borderRadius: BorderRadius.circular(AppTheme.radiusMd),
-                  ),
-                  child: Column(
-                    children: [
-                      Text('解决后预计', style: AppTheme.label(size: 13)),
-                      const SizedBox(height: 2),
-                      Text(
-                        data.predictedGain,
-                        style:
-                            AppTheme.heading(size: 22, weight: FontWeight.w900)
-                                .copyWith(color: AppTheme.accent),
-                      ),
-                      const SizedBox(height: 2),
-                      Text(data.relatedQuestion,
-                          style: AppTheme.label(size: 11)),
-                    ],
-                  ),
-                ),
-              ],
-            ),
-          ),
-          const SizedBox(height: 12),
-          Container(
-            width: double.infinity,
-            height: 48,
-            decoration: BoxDecoration(
-              gradient: AppTheme.gradientPrimary,
-              borderRadius: BorderRadius.circular(AppTheme.radiusLg),
-              boxShadow: AppTheme.shadowClayButton,
-            ),
-            child: ElevatedButton(
-              onPressed: () => context.push(
-                AppRoutes.modelTrainingPath(
-                  modelId: modelId,
-                  source: 'self_study',
-                ),
               ),
-              style: ElevatedButton.styleFrom(
-                backgroundColor: Colors.transparent,
-                shadowColor: Colors.transparent,
-                foregroundColor: Colors.white,
-                shape: RoundedRectangleBorder(
+              const SizedBox(height: 12),
+              Container(
+                width: double.infinity,
+                height: 48,
+                decoration: BoxDecoration(
+                  gradient: AppTheme.gradientPrimary,
                   borderRadius: BorderRadius.circular(AppTheme.radiusLg),
+                  boxShadow: AppTheme.shadowClayButton,
                 ),
-                elevation: 0,
-              ),
-              child: Text(
-                data.buttonLabel,
-                style: AppTheme.body(
-                  size: 16,
-                  weight: FontWeight.w800,
-                  color: Colors.white,
+                child: ElevatedButton(
+                  onPressed: () => context.push(
+                    AppRoutes.modelTrainingPath(
+                      modelId: modelId,
+                      source: 'self_study',
+                    ),
+                  ),
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: Colors.transparent,
+                    shadowColor: Colors.transparent,
+                    foregroundColor: Colors.white,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(AppTheme.radiusLg),
+                    ),
+                    elevation: 0,
+                  ),
+                  child: Text(
+                    data.buttonLabel,
+                    style: AppTheme.body(
+                      size: 16,
+                      weight: FontWeight.w800,
+                      color: Colors.white,
+                    ),
+                  ),
                 ),
               ),
-            ),
-          ),
-        ],
+            ],
+          );
+        },
+      ),
+    );
+  }
+
+  Widget _statusCard(String message) {
+    return ClayCard(
+      padding: const EdgeInsets.all(14),
+      child: Text(
+        message,
+        style: AppTheme.body(size: 13, weight: FontWeight.w600),
       ),
     );
   }
@@ -192,7 +202,7 @@ class _DashboardData {
     final chapter = detail.chapter.trim();
     final section = detail.section.trim();
     final related = chapter.isEmpty && section.isEmpty
-        ? '关联大题第1题 (12分)'
+        ? '关联大题待补充'
         : '${chapter.isEmpty ? '关联章节' : chapter} · ${section.isEmpty ? '关键模型' : section}';
 
     return _DashboardData(
@@ -205,16 +215,6 @@ class _DashboardData {
       funnelLayers: _buildFunnelLayers(level),
     );
   }
-
-  factory _DashboardData.fallback() => _DashboardData(
-        level: 1,
-        levelLabel: '建模卡住',
-        levelDesc: '看到题不确定该用什么方法',
-        predictedGain: '+5 分',
-        relatedQuestion: '关联大题第1题 (12分)',
-        buttonLabel: '开始训练 · 从 Step 1 开始',
-        funnelLayers: _buildFunnelLayers(1),
-      );
 
   static String _levelLabel(int level) => switch (level) {
         0 => '未学习',

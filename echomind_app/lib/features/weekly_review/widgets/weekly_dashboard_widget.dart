@@ -12,29 +12,40 @@ class WeeklyDashboardWidget extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final asyncData = ref.watch(weeklyReviewProvider);
 
-    final data = asyncData.when(
-      loading: _DashboardViewData.fallback,
-      error: (_, __) => _DashboardViewData.fallback(),
-      data: _DashboardViewData.fromApi,
-    );
-
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 20),
-      child: ClayCard(
-        padding: const EdgeInsets.symmetric(vertical: 18, horizontal: 16),
-        child: Column(
-          children: [
-            Text(data.period, style: AppTheme.label(size: 13)),
-            const SizedBox(height: 14),
-            Row(
+      child: asyncData.when(
+        loading: () => _statusCard('周统计加载中...'),
+        error: (_, __) => _statusCard('周统计加载失败，请检查后端接口与鉴权状态'),
+        data: (api) {
+          final data = _DashboardViewData.fromApi(api);
+          return ClayCard(
+            padding: const EdgeInsets.symmetric(vertical: 18, horizontal: 16),
+            child: Column(
               children: [
-                _stat(data.closures, '闭环数', null),
-                _stat(data.studyTime, '学习时长', null),
-                _stat(data.scoreChange, '预测分变化', AppTheme.accent),
+                Text(data.period, style: AppTheme.label(size: 13)),
+                const SizedBox(height: 14),
+                Row(
+                  children: [
+                    _stat(data.closures, '闭环数', null),
+                    _stat(data.studyTime, '学习时长', null),
+                    _stat(data.scoreChange, '预测分变化', AppTheme.accent),
+                  ],
+                ),
               ],
             ),
-          ],
-        ),
+          );
+        },
+      ),
+    );
+  }
+
+  Widget _statusCard(String message) {
+    return ClayCard(
+      padding: const EdgeInsets.all(14),
+      child: Text(
+        message,
+        style: AppTheme.body(size: 13, weight: FontWeight.w600),
       ),
     );
   }
@@ -92,20 +103,11 @@ class _DashboardViewData {
   });
 
   factory _DashboardViewData.fromApi(WeeklyReviewData data) {
-    final isEmpty = data.totalQuestions == 0 &&
-        data.correctCount == 0 &&
-        data.errorCount == 0 &&
-        data.newMastered == 0 &&
-        data.lastWeekScore == 0 &&
-        data.thisWeekScore == 0;
-
-    if (isEmpty) return _DashboardViewData.fallback();
-
     final closures =
         (data.newMastered > 0 ? data.newMastered : data.correctCount)
             .toString();
 
-    final minutes = (data.totalQuestions * 7).clamp(30, 300);
+    final minutes = data.totalQuestions > 0 ? data.totalQuestions * 7 : 0;
     final hour = (minutes / 60).floor();
     final minute = minutes % 60;
     final time = '${hour}h${minute.toString().padLeft(2, '0')}m';
@@ -120,11 +122,4 @@ class _DashboardViewData {
       scoreChange: score,
     );
   }
-
-  factory _DashboardViewData.fallback() => const _DashboardViewData(
-        period: '本周 (2月3日 - 2月9日)',
-        closures: '12',
-        studyTime: '2h25m',
-        scoreChange: '+3',
-      );
 }

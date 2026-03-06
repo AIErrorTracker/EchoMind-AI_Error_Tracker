@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:echomind_app/providers/flashcard_provider.dart';
 import 'package:echomind_app/shared/theme/app_theme.dart';
 import 'package:echomind_app/shared/widgets/clay_card.dart';
-import 'package:echomind_app/providers/flashcard_provider.dart';
 
 class FlashcardWidget extends ConsumerStatefulWidget {
   const FlashcardWidget({super.key});
@@ -15,14 +15,6 @@ class _FlashcardWidgetState extends ConsumerState<FlashcardWidget> {
   bool _flipped = false;
   int _index = 0;
   double _dragOffset = 0;
-
-  static const _mockCards = [
-    Flashcard(
-      id: 'mock-1',
-      question: '库仑定律的适用条件是什么？',
-      answer: '库仑定律适用于真空中两个静止点电荷之间的相互作用力。',
-    ),
-  ];
 
   void _goTo(int index, int total) {
     if (index < 0 || index >= total) return;
@@ -43,8 +35,17 @@ class _FlashcardWidgetState extends ConsumerState<FlashcardWidget> {
   @override
   Widget build(BuildContext context) {
     final cardsAsync = ref.watch(flashcardProvider);
-    final cards = cardsAsync.whenOrNull(data: (d) => d.isNotEmpty ? d : null) ??
-        _mockCards;
+    if (cardsAsync.isLoading) {
+      return const Center(child: CircularProgressIndicator());
+    }
+    if (cardsAsync.hasError) {
+      return _statusPanel('闪卡加载失败，请检查后端接口与鉴权状态');
+    }
+
+    final cards = cardsAsync.value ?? const <Flashcard>[];
+    if (cards.isEmpty) {
+      return _statusPanel('暂无闪卡数据');
+    }
 
     final currentIndex = _index.clamp(0, cards.length - 1).toInt();
     final card = cards[currentIndex];
@@ -79,9 +80,7 @@ class _FlashcardWidgetState extends ConsumerState<FlashcardWidget> {
                     ),
                     child: Padding(
                       padding: const EdgeInsets.symmetric(
-                        horizontal: 44,
-                        vertical: 16,
-                      ),
+                          horizontal: 44, vertical: 16),
                       child: AnimatedSwitcher(
                         duration: const Duration(milliseconds: 250),
                         transitionBuilder: (child, anim) => FadeTransition(
@@ -101,9 +100,7 @@ class _FlashcardWidgetState extends ConsumerState<FlashcardWidget> {
                     top: 12,
                     child: Container(
                       padding: const EdgeInsets.symmetric(
-                        horizontal: 8,
-                        vertical: 4,
-                      ),
+                          horizontal: 8, vertical: 4),
                       decoration: BoxDecoration(
                         color: AppTheme.canvas,
                         borderRadius: BorderRadius.circular(AppTheme.radiusSm),
@@ -120,9 +117,7 @@ class _FlashcardWidgetState extends ConsumerState<FlashcardWidget> {
                     top: 12,
                     child: Container(
                       padding: const EdgeInsets.symmetric(
-                        horizontal: 8,
-                        vertical: 4,
-                      ),
+                          horizontal: 8, vertical: 4),
                       decoration: BoxDecoration(
                         color: AppTheme.canvas,
                         borderRadius: BorderRadius.circular(AppTheme.radiusSm),
@@ -184,9 +179,8 @@ class _FlashcardWidgetState extends ConsumerState<FlashcardWidget> {
           padding: const EdgeInsets.only(top: 8, bottom: 6),
           child: Text(
             _flipped ? '已翻转 · 查看下方解析' : '点击卡片查看答案',
-            style: AppTheme.label(size: 12).copyWith(
-              fontWeight: FontWeight.w600,
-            ),
+            style:
+                AppTheme.label(size: 12).copyWith(fontWeight: FontWeight.w600),
           ),
         ),
         Padding(
@@ -206,6 +200,20 @@ class _FlashcardWidgetState extends ConsumerState<FlashcardWidget> {
           child: _flipped ? _analysisSection(card) : const SizedBox.shrink(),
         ),
       ],
+    );
+  }
+
+  Widget _statusPanel(String message) {
+    return Padding(
+      padding: const EdgeInsets.fromLTRB(20, 20, 20, 16),
+      child: ClayCard(
+        padding: const EdgeInsets.all(16),
+        child: Text(
+          message,
+          style: AppTheme.body(size: 14, weight: FontWeight.w600),
+          textAlign: TextAlign.center,
+        ),
+      ),
     );
   }
 
@@ -238,9 +246,8 @@ class _FlashcardWidgetState extends ConsumerState<FlashcardWidget> {
       children: [
         Text(
           '答案',
-          style: AppTheme.label(size: 13, color: AppTheme.accent).copyWith(
-            fontWeight: FontWeight.w700,
-          ),
+          style: AppTheme.label(size: 13, color: AppTheme.accent)
+              .copyWith(fontWeight: FontWeight.w700),
         ),
         const SizedBox(height: 8),
         Text(

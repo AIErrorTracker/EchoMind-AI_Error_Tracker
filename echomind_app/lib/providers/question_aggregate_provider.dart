@@ -62,10 +62,6 @@ class QuestionHistoryItem {
 
 final questionAggregateProvider =
     FutureProvider<QuestionAggregateData>((ref) async {
-  try {
-    final res = await ApiClient().dio.get('/questions/aggregate');
-    return QuestionAggregateData.fromJson(res.data);
-  } catch (_) {
-    return const QuestionAggregateData();
-  }
+  final res = await ApiClient().dio.get('/questions/aggregate');
+  return QuestionAggregateData.fromJson(res.data);
 });

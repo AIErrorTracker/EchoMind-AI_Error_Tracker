@@ -1,0 +1,10 @@
+﻿{
+    "login_ok":  true,
+    "token_length":  165,
+    "dynamic_question_id":  "",
+    "dynamic_kp_id":  "kp_friction",
+    "dynamic_model_id":  "model_energy_method",
+    "total_checks":  31,
+    "ok_count":  23,
+    "fail_count":  8
+}

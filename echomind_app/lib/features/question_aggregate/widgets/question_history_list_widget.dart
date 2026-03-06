@@ -18,7 +18,7 @@ class QuestionHistoryListWidget extends ConsumerWidget {
         height: 80,
         child: Center(child: CircularProgressIndicator()),
       ),
-      error: (_, __) => const SizedBox.shrink(),
+      error: (_, __) => _status('做题历史加载失败，请检查后端接口与鉴权状态'),
       data: (data) {
         return Padding(
           padding: const EdgeInsets.symmetric(horizontal: 20),
@@ -38,12 +38,7 @@ class QuestionHistoryListWidget extends ConsumerWidget {
               ),
               const SizedBox(height: 12),
               if (data.history.isEmpty)
-                Padding(
-                  padding: const EdgeInsets.all(16),
-                  child: Center(
-                    child: Text('暂无做题记录', style: AppTheme.label(size: 13)),
-                  ),
-                )
+                _status('暂无做题记录')
               else
                 for (var i = 0; i < data.history.length; i++) ...[
                   if (i > 0) const SizedBox(height: 10),
@@ -56,14 +51,26 @@ class QuestionHistoryListWidget extends ConsumerWidget {
     );
   }
 
+  Widget _status(String message) {
+    return ClayCard(
+      padding: const EdgeInsets.all(14),
+      child: Text(
+        message,
+        style: AppTheme.body(size: 13, weight: FontWeight.w600),
+      ),
+    );
+  }
+
   Widget _buildItem(BuildContext context, QuestionHistoryItem item) {
     final isCorrect = _isCorrect(item.result);
     final color = isCorrect ? AppTheme.success : AppTheme.danger;
     final mark = isCorrect ? 'OK' : 'X';
+    final questionId = item.questionId?.trim() ?? '';
 
     return ClayCard(
-      onTap: () =>
-          context.push(AppRoutes.questionDetailPath(item.questionId ?? 'demo')),
+      onTap: questionId.isEmpty
+          ? null
+          : () => context.push(AppRoutes.questionDetailPath(questionId)),
       padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 12),
       child: Row(
         children: [
